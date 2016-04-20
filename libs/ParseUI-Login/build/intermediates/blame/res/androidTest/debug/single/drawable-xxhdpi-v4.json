@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "D:\\DoAnTotNghiep\\DoAnTotNghiep\\libs\\ParseUI-Login\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi-v4\\com_parse_ui_facebook_login_logo.png",
+        "source": "D:\\DoAnTotNghiep\\DoAnTotNghiep\\libs\\ParseUI-Login\\build\\intermediates\\bundles\\debug\\res\\drawable-xxhdpi-v4\\com_parse_ui_facebook_login_logo.png"
+    },
+    {
+        "merged": "D:\\DoAnTotNghiep\\DoAnTotNghiep\\libs\\ParseUI-Login\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi-v4\\com_parse_ui_twitter_login_logo.png",
+        "source": "D:\\DoAnTotNghiep\\DoAnTotNghiep\\libs\\ParseUI-Login\\build\\intermediates\\bundles\\debug\\res\\drawable-xxhdpi-v4\\com_parse_ui_twitter_login_logo.png"
+    },
+    {
+        "merged": "D:\\DoAnTotNghiep\\DoAnTotNghiep\\libs\\ParseUI-Login\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi-v4\\com_parse_ui_app_logo.png",
+        "source": "D:\\DoAnTotNghiep\\DoAnTotNghiep\\libs\\ParseUI-Login\\build\\intermediates\\bundles\\debug\\res\\drawable-xxhdpi-v4\\com_parse_ui_app_logo.png"
+    }
+]
