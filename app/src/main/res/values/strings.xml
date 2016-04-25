@@ -6,4 +6,5 @@
     <string name="tab_list">DANH SÁCH BẠN</string>
     <string name="tab_finds">TÌM KIẾM THEO TÊN </string>
     <string name="tab_finds_gps">TÌM KIẾM GPS</string>
+    <string name="dialog_title">SAVING DATA</string>
 </resources>

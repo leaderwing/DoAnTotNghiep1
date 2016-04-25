@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.model.Post_Info;
 import com.model.ProfileUser;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
@@ -25,6 +26,7 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         ParseObject.registerSubclass(ProfileUser.class);
+        ParseObject.registerSubclass(Post_Info.class);
         Parse.initialize(this, "ZVuYQgGmT79jqb4HpbbabGz8xenRTXaYI30cCTDM", "Zrw7TkZIy1jGGY4JEGl0MAtakRBLXCeIMnF4qjrQ");
         ParseInstallation.getCurrentInstallation().saveInBackground();
         mInstance = this;

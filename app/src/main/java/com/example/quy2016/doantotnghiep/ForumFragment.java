@@ -34,7 +34,7 @@ public class ForumFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.forum_main_category, null);
+        View view =  inflater.inflate(R.layout.forum_main_category,container ,false);
         lv = (ListView) view.findViewById(R.id.list2);
         loadData();
         String from[] = {"image" , "title" , "postNum" , "memberNum"};
@@ -44,10 +44,10 @@ public class ForumFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(getContext(), DetailTopicsActivity.class);
+                Intent i = new Intent(getActivity(), DetailTopicsActivity.class);
                 i.putExtra("position",position);
                 startActivity(i);
-                Toast.makeText(getContext(),position , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),String.valueOf(position) , Toast.LENGTH_SHORT).show();
             }
         });
         return view;

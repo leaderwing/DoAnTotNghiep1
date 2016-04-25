@@ -30,6 +30,10 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             />
+        <activity android:name="com.hust.forum.DetailTopicsActivity"
+            android:label="Danh sách bài viết"
+            android:launchMode="singleTop"
+            />
         <activity android:name="com.hust.news.DisPlayWebPageActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop" />

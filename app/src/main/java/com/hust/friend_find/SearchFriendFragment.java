@@ -136,17 +136,17 @@ public class SearchFriendFragment extends Fragment{
         @Override
         protected String doInBackground(String... sText) {
 
-             //ProfileUser profileUser;
-             url = "" + sText[0];
-            String return_Results = getUserList(url);
+            //ProfileUser profileUser;
+            url = "" + sText[0];
+            String return_Results = getUserList(url.trim());
             this.textSearch = sText[0];
             return  return_Results;
         }
         public String getUserList(String url)
         {
-            ParseQuery<ParseObject> query =  ParseQuery.getQuery("user_details");
-            query.whereStartsWith("Name",url);
-            Log.d(query.toString() , "Query :");
+            ParseQuery query =  new ParseQuery("user_details");
+            // query.whereStartsWith("Name",url);
+            // Log.d(query.toString() , "Query :");
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
@@ -265,5 +265,3 @@ public class SearchFriendFragment extends Fragment{
         ImageButton add_friend;
     }
 }
-
-
