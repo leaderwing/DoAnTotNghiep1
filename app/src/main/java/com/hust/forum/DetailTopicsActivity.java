@@ -100,7 +100,7 @@ public class DetailTopicsActivity extends AppCompatActivity{
     private void prepareDataPost()
     {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Post_Info");
-        //query.whereEqualTo("Course",course);
+        query.whereEqualTo("Course",course);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
