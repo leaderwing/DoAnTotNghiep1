@@ -1,7 +1,10 @@
 package com.hust.forum;
 
+import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -32,30 +35,35 @@ import java.util.List;
 /**
  * Created by Administrator on 4/20/2016.
  */
-public class DetailTopicsActivity extends AppCompatActivity{
+public class DetailTopicsActivity extends AppCompatActivity {
     private List<Post_Info> post_infos = new ArrayList<>();
     private RecyclerView recyclerView;
     private PostInfoAdapter postInfoAdapter;
     public int newInt;
-    private String course ;
+    private String course;
+    public static final int REQUEST_CODE = 111;
+    ProgressDialog progress;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_post_list);
+        setContentView(R.layout.main_layout_post);
         Intent i = getIntent();
         if (savedInstanceState == null) {
             Bundle extras = i.getExtras();
-            if(extras == null) {
-                newInt= -1;
+            if (extras == null) {
+                newInt = -1;
             } else {
-                newInt= extras.getInt("position");
+                newInt = extras.getInt("position");
             }
         } else {
-            newInt= (Integer) savedInstanceState.getSerializable("position");
+            newInt = (Integer) savedInstanceState.getSerializable("position");
         }
-        switch (newInt)
-        {
+        switch (newInt) {
             case 0:
                 course = "k56";
                 break;
@@ -65,7 +73,7 @@ public class DetailTopicsActivity extends AppCompatActivity{
             case 2:
                 course = "k58";
                 break;
-            case  3:
+            case 3:
                 course = "k59";
                 break;
             case 4:
@@ -74,20 +82,24 @@ public class DetailTopicsActivity extends AppCompatActivity{
             default:
                 break;
         }
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeAsUpIndicator(R.drawable.back);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         postInfoAdapter = new PostInfoAdapter(post_infos);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this , LinearLayoutManager.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(postInfoAdapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
                 Post_Info post_info = post_infos.get(position);
-                Toast.makeText(getApplicationContext(),post_info.getTitle().toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), post_info.getTitle().toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -96,29 +108,38 @@ public class DetailTopicsActivity extends AppCompatActivity{
             }
         }));
         prepareDataPost();
+
     }
-    private void prepareDataPost()
-    {
+
+    private void prepareDataPost() {
+        progress = ProgressDialog.show(this, "",
+                "LOADING DATA...", true);
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Post_Info");
-        query.whereEqualTo("Course",course);
+        query.whereEqualTo("Course", course);
+        query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
-                for (ParseObject post:objects)
-                {
-                     Post_Info  post_info = new Post_Info();
-                    post_info.setTitle(post.getString("Title"));
-                    post_info.setAuthorName(post.getString("AuthorName"));
-                    post_info.setDate(post.getUpdatedAt());
-                    post_info.setNumberView(post.getInt("Post_Num_View"));
-                    post_info.setNumberPost(post.getInt("Post_Num_Comment"));
-                    post_infos.add(post_info);
-
+                if (objects != null && objects.size() > 0) {
+                    for (int i = 0; i < objects.size(); i++) {
+                        ParseObject po = objects.get(i);
+                        Post_Info post_info = new Post_Info();
+                        post_info.setAuthorName(po.getString("AuthorName"));
+                        post_info.setTitle(po.getString("Title"));
+                        post_info.setNumberPost(po.getInt("Post_Num_Comment"));
+                        post_info.setNumberView(po.getInt("Post_Num_View"));
+                        post_infos.add(post_info);
+                        postInfoAdapter.notifyDataSetChanged();
+                    }
                 }
+                progress.dismiss();
             }
         });
-        postInfoAdapter.notifyDataSetChanged();
+
     }
+
+
+
 
     public interface ClickListener {
         void onClick(View view, int position);
@@ -129,9 +150,9 @@ public class DetailTopicsActivity extends AppCompatActivity{
     public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         private GestureDetector gestureDetector;
-        private DetailTopicsActivity.ClickListener clickListener;
+        private ClickListener clickListener;
 
-        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final DetailTopicsActivity.ClickListener clickListener) {
+        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
             this.clickListener = clickListener;
             gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
@@ -172,20 +193,43 @@ public class DetailTopicsActivity extends AppCompatActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_post,menu);
+        inflater.inflate(R.menu.menu_post, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.create_new:
+                CreateNewPost();
                 return true;
             case R.id.filter:
+                FindPost();
+                return true;
+            case android.R.id.home:
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void CreateNewPost() {
+        Intent data = new Intent(getApplicationContext(), CreateNewPostActivity.class);
+        data.putExtra("khoa_hoc", course);
+        startActivityForResult(data, REQUEST_CODE);
+    }
+
+    private void FindPost() {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+            }
         }
     }
 }

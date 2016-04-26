@@ -51,9 +51,9 @@ public class PostInfoAdapter extends RecyclerView.Adapter<PostInfoAdapter.MyView
         Post_Info post_info = postsList.get(position);
         holder.title.setText(post_info.getTitle());
         holder.author.setText(post_info.getAuthorName());
-        holder.date.setText(post_info.getDate().toString());
-        holder.viewNum.setText(post_info.getNumberPost());
-        holder.commentNum.setText(post_info.getNumberPost());
+        //holder.date.setText(post_info.getDate().toString());
+        holder.viewNum.setText(String.valueOf(post_info.getNumberPost()));
+        holder.commentNum.setText(String.valueOf(post_info.getNumberPost()));
     }
 
     @Override

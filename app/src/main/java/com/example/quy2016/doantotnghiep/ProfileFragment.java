@@ -258,6 +258,7 @@ public class ProfileFragment extends Fragment
             @Override
             public void done(ParseException e) {
                 dialog.dismiss();
+                getActivity().finish();
 
             }
         });

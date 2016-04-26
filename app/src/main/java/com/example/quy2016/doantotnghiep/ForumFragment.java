@@ -47,7 +47,6 @@ public class ForumFragment extends Fragment {
                 Intent i = new Intent(getActivity(), DetailTopicsActivity.class);
                 i.putExtra("position",position);
                 startActivity(i);
-                Toast.makeText(getContext(),String.valueOf(position) , Toast.LENGTH_SHORT).show();
             }
         });
         return view;

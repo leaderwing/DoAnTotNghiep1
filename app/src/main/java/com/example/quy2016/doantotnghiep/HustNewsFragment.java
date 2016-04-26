@@ -14,7 +14,7 @@ import com.hust.news.ListRSSItemsActivity;
 /**
  * Created by Ratan on 7/29/2015.
  */
-public class PrimaryFragment extends Fragment {
+public class HustNewsFragment extends Fragment {
     ImageButton imgbutton1 , imgbutton2 ,imgbutton3, imgbutton4 ;
     public  static  final  String LINK1 = "http://ctsv.hust.edu.vn/joomla-pages-2/smart-seach?format=feed&type=rss";
     public  static  final  String LINK2 = "http://ctsv.hust.edu.vn/k2-listing/itemlist/category/133-medical?format=feed&type=rss";
