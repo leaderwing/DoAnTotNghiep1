@@ -156,6 +156,7 @@ public class SearchFriendFragment extends Fragment{
                             ProfileUser profileUser = new ProfileUser();
                             profileUser.setAuthorName(user.getString("Name"));
                             profileUser.setSchool(user.getString("user_school"));
+                            if(!user.getParseFile("user_avatar").isDirty())
                             profileUser.setPhotoFile(user.getParseFile("user_avatar"));
                             //returnResults.add(profileUser);
                             mathFound = "N";
@@ -250,6 +251,7 @@ public class SearchFriendFragment extends Fragment{
             {
                 holder = (ViewHolder) convertView.getTag();
             }
+            if(!user.getPhotoFile().isDirty())
             holder.avatar.setParseFile(user.getPhotoFile());
             holder.userName.setText(user.getAuthorName());
             holder.user_school.setText(user.getSchool());

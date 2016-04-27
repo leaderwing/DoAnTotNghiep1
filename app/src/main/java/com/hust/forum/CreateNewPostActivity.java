@@ -95,8 +95,6 @@ public class CreateNewPostActivity extends Activity {
                         Toast.makeText(getApplicationContext(),"Bạn chưa viết nội dung cho bài viết",Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        // Intent result  = new Intent();
-                        setResult(RESULT_OK);
                         finish();
                         progress.dismiss();
                     }

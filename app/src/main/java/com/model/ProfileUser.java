@@ -30,7 +30,10 @@ public class ProfileUser extends ParseObject {
     {
         put("Email",user);
     }
-
+    public String getbjectId()
+    {
+        return getObjectId();
+    }
     public String getCourse()
     {
         return getString("course");

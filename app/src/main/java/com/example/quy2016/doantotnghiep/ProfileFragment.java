@@ -53,11 +53,13 @@ public class ProfileFragment extends Fragment
     EditText tvName , tvEmail,tvCourse,tvSchool,tvHobby,tvCharacter,tvBirthday;
     ToggleButton btnName,btnEmail,btnBirth,btnCourse,btnSchool,btnHobby,btnCharacter;
     Button btnSave;
+    ImageView avatar;
     ImageButton imgUpload;
     ProfileUser profileUser;
     public  static  final  int SELECT_PICTURE = 1000;
     public Uri selectedImageUri;
     public  String selectedImagePath;
+    public String user_email;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class ProfileFragment extends Fragment
         tvSchool = (EditText) view.findViewById(R.id.tvSchool);
         tvHobby = (EditText) view.findViewById(R.id.tvHobby);
         tvCharacter = (EditText) view.findViewById(R.id.tvCharacter);
+        avatar = (ImageView) view.findViewById(R.id.avatar_profile);
         // btnEmail = (ToggleButton) view.findViewById(R.id.btnEmail);
         btnBirth = (ToggleButton) view.findViewById(R.id.btnBirthday);
         btnCourse = (ToggleButton) view.findViewById(R.id.btnCourse);
@@ -83,14 +86,42 @@ public class ProfileFragment extends Fragment
             @Override
             public void onClick(View v) {
                 openInGallery();
-                Toast.makeText(getContext() , "upload" , Toast.LENGTH_SHORT).show();
+                final ProgressDialog dialog = new ProgressDialog(getContext());
+                dialog.setMessage(getString(R.string.dialog_title));
+                dialog.show();
+                InputStream imageStream = null;
+                try {
+                    imageStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                // Compress image to lower quality scale 1 - 100
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] image = stream.toByteArray();
+                final ParseFile file = new ParseFile("user_avatar", image);
+                // Upload the image into Parse Cloud
+                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+                profileUser = new ProfileUser();
+                query1.whereEqualTo("Email",user_email);
+                query1.getInBackground(profileUser.getbjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.put("user_avatar",file);
+                        object.saveInBackground();
+                    }
+                });
+
+
             }
         });
         ParseUser user = ParseUser.getCurrentUser();
-        String name = user.getUsername();
-        tvName.setText(name);
-        tvEmail.setText(user.getEmail().toString());
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("user_details");
+        user_email = user.getEmail().toString();
+        tvName.setText(user.get("name").toString());
+        tvEmail.setText(user_email);
+
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("user_details");
         query.whereEqualTo("Email", ParseUser.getCurrentUser().getEmail());
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -103,12 +134,14 @@ public class ProfileFragment extends Fragment
                     profileUser.setCharacter(object.getString("user_char"));
                     profileUser.setSchool(object.getString("user_school"));
                     profileUser.setHobbies(object.getString("user_hobbies"));
+                    if(!object.getParseFile("user_avatar").isDirty())
+                    profileUser.setPhotoFile(object.getParseFile("user_avatar"));
                     tvBirthday.setText(profileUser.getBirthday().toString());
                     tvCourse.setText(profileUser.getCourse().toString());
                     tvSchool.setText(profileUser.getSchool().toString());
                     tvHobby.setText(profileUser.getHobbies().toString());
                     tvCharacter.setText(profileUser.getCharacter().toString());
-
+                   // avatar.setImageBitmap(profileUser.getPhotoFile().);
                 }
             }
         });
@@ -123,6 +156,15 @@ public class ProfileFragment extends Fragment
                     tvName.setFocusableInTouchMode(false);
                     tvName.setFocusable(false);
                 }
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+                query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.put("name" ,tvName.getText().toString());
+                        object.saveInBackground();
+                    }
+                });
+
             }
         });
         btnBirth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -135,6 +177,16 @@ public class ProfileFragment extends Fragment
                     tvBirthday.setFocusableInTouchMode(false);
                     tvBirthday.setFocusable(false);
                 }
+                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+                profileUser = new ProfileUser();
+                query1.whereEqualTo("Email",user_email);
+                query1.getInBackground(profileUser.getbjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.put("user_birthday",tvBirthday.getText());
+                        object.saveInBackground();
+                    }
+                });
             }
         });
         btnHobby.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -147,6 +199,17 @@ public class ProfileFragment extends Fragment
                     tvHobby.setFocusableInTouchMode(false);
                     tvHobby.setFocusable(false);
                 }
+                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+                profileUser = new ProfileUser();
+                query1.whereEqualTo("Email",user_email);
+                query1.getInBackground(profileUser.getbjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.put("user_hobbies",tvHobby.getText());
+                        object.saveInBackground();
+                    }
+                });
+
             }
         });
         btnCourse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -159,6 +222,16 @@ public class ProfileFragment extends Fragment
                     tvCourse.setFocusableInTouchMode(false);
                     tvCourse.setFocusable(false);
                 }
+                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+                profileUser = new ProfileUser();
+                query1.whereEqualTo("Email",user_email);
+                query1.getInBackground(profileUser.getbjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.put("Course",tvCourse.getText());
+                        object.saveInBackground();
+                    }
+                });
             }
         });
         btnCharacter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -171,6 +244,16 @@ public class ProfileFragment extends Fragment
                     tvCharacter.setFocusableInTouchMode(false);
                     tvCharacter.setFocusable(false);
                 }
+                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+                profileUser = new ProfileUser();
+                query1.whereEqualTo("Email",user_email);
+                query1.getInBackground(profileUser.getbjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.put("user_char",tvCharacter.getText());
+                        object.saveInBackground();
+                    }
+                });
             }
         });
         btnSchool.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -183,87 +266,21 @@ public class ProfileFragment extends Fragment
                     tvSchool.setFocusableInTouchMode(false);
                     tvSchool.setFocusable(false);
                 }
+                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+                profileUser = new ProfileUser();
+                query1.whereEqualTo("Email",user_email);
+                query1.getInBackground(profileUser.getbjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.put("user_school",tvSchool.getText());
+                        object.saveInBackground();
+                    }
+                });
             }
         });
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
-//                query1.getInBackground("Ayy8nYM2FM", new GetCallback<ParseObject>() {
-//                    @Override
-//                    public void done(ParseObject object, ParseException e) {
-//                        if (e == null) {
-//                            object.put("user_school", String.valueOf(tvSchool.getText()));
-//                            object.put("user_birthday", String.valueOf(tvBirthday.getText()));
-//                            object.put("course", String.valueOf(tvCourse.getText()));
-//                            object.put("user_char", tvCharacter.getText().toString());
-//                            object.put("user_hobbies", tvHobby.getText().toString());
-//                            object.saveEventually(new SaveCallback() {
-//                                @Override
-//                                public void done(ParseException e) {
-//                                    if (e == null) {
-//                                        Toast.makeText(getContext(), "Luu thanh cong", Toast.LENGTH_LONG).show();
-//
-//                                    }
-//                                }
-//                            });
-//                        } else
-//                            Toast.makeText(getContext(), "Xay ra loi ", Toast.LENGTH_LONG).show();
-//
-//                    }
-//                });
-                SaveData();
-
-            }
-        });
-
-
 
         return view;
     }
-    private  void SaveData()
-    {
-        final ProgressDialog dialog = new ProgressDialog(getContext());
-        dialog.setMessage(getString(R.string.dialog_title));
-        dialog.show();
-        InputStream imageStream = null;
-        try {
-            imageStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        // Compress image to lower quality scale 1 - 100
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] image = stream.toByteArray();
-        ParseFile file = new ParseFile("user_avatar", image);
-        // Upload the image into Parse Cloud
-        file.saveInBackground();
-        Log.d("File======", "" + file);
-        ProfileUser user = new ProfileUser();
-        user.setEmail(ParseUser.getCurrentUser());
-        user.setAuthorName(String.valueOf(tvName.getText()));
-        user.setBirthday(String.valueOf(tvBirthday.getText()));
-        user.setCourse(String.valueOf(tvCourse.getText()));
-        user.setCharacter(String.valueOf(tvCharacter.getText()));
-        user.setHobbies(String.valueOf(tvHobby.getText()));
-        user.setSchool(String.valueOf(tvSchool.getText()));
-        user.setPhotoFile(file);
-        ParseACL acl = new ParseACL();
-        acl.setPublicReadAccess(true);
-        user.setACL(acl);
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                dialog.dismiss();
-                getActivity().finish();
-
-            }
-        });
-    }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

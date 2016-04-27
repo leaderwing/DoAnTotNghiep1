@@ -19,7 +19,7 @@ import com.parse.ParseQueryAdapter;
 public class FriendListAdapter extends ParseQueryAdapter<ProfileUser> {
 
     public FriendListAdapter(Context context) {
-        super(context, new ParseQueryAdapter.QueryFactory<ProfileUser>() {
+        super(context, new QueryFactory<ProfileUser>() {
             public ParseQuery<ProfileUser> create() {
                 // Here we can configure a ParseQuery to display
                 // only top-rated meals.

@@ -5,11 +5,12 @@
             <item android:id="@+id/create_new"
                 android:title="Đăng bài viết"
                 android:icon="@drawable/new_post"
-                android:showAsAction="collapseActionView"
+                android:showAsAction="ifRoom"
                 />
             <item android:id="@+id/filter"
                 android:title="Tìm kiếm bài viết"
-                android:showAsAction="collapseActionView"
+                android:showAsAction="always"
+                android:actionViewClass="android.support.v7.widget.SearchView"
                 android:icon="@drawable/find"/>
 
 </menu>

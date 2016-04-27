@@ -25,7 +25,6 @@ public class Post_Info extends ParseObject {
     public String getEmail() {
         return getString("Email");
     }
-
     public void setEmail(String Email) {
         put("Email", Email);
     }
@@ -75,7 +74,7 @@ public class Post_Info extends ParseObject {
     }
 
     public Date getDate() {
-        return getDate("createdAt");
+        return getCreatedAt();
     }
     public void setDate(Date date)
     {

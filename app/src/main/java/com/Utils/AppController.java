@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.hust.chat.Conversation;
 import com.model.Post_Info;
 import com.model.ProfileUser;
 import com.parse.Parse;
@@ -27,6 +28,7 @@ public class AppController extends Application {
         super.onCreate();
         ParseObject.registerSubclass(ProfileUser.class);
         ParseObject.registerSubclass(Post_Info.class);
+        ParseObject.registerSubclass(Conversation.class);
         Parse.initialize(this, "ZVuYQgGmT79jqb4HpbbabGz8xenRTXaYI30cCTDM", "Zrw7TkZIy1jGGY4JEGl0MAtakRBLXCeIMnF4qjrQ");
         ParseInstallation.getCurrentInstallation().saveInBackground();
         mInstance = this;
