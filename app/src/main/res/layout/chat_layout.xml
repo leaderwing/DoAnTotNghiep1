@@ -1,47 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@android:color/white"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
     <ListView
-        android:id="@+id/lvChat"
-        android:transcriptMode="alwaysScroll"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_above="@+id/llSend"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
-    <RelativeLayout
-        android:id="@+id/llSend"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:paddingTop="5dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        android:layout_height="wrap_content" >
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/listChat"
+        android:divider="@color/white"
+        android:dividerHeight="@dimen/pad_5dp"
+        android:paddingBottom="@dimen/pad_10dp"
+        android:paddingTop="@dimen/pad_10dp"
+        tools:listitem="@layout/chat_item_rcv"
+        >
+
+
+    </ListView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray_light"
+        android:gravity="center_vertical"
+        android:padding="@dimen/pad_5dp"
+        tools:context="com.hust.chat.ChatActivity" >
         <EditText
-            android:id="@+id/etMessage"
-            android:layout_toLeftOf="@+id/btSend"
-            android:layout_alignBottom="@+id/btSend"
-            android:layout_width="match_parent"
+            android:id="@+id/txtChat"
+            style="@style/edittext_msg"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="top"
-            android:hint="Type message..."
-            android:inputType="textShortMessage"
-            android:imeOptions="actionSend"
-            />
+            android:layout_weight="1"
+            android:hint="Type message...">
+
+            </EditText>
         <Button
             android:id="@+id/btSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|right"
-            android:paddingRight="10dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_send"
-            android:textSize="18sp" >
-        </Button>
-    </RelativeLayout>
-</RelativeLayout>
+            style="@style/btn"
+            android:background="@drawable/ic_send" />
+
+    </LinearLayout>
+</LinearLayout>

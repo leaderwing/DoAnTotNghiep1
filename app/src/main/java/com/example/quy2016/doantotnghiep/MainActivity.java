@@ -15,6 +15,8 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginActivity;
 
+import static com.Utils.Utils.UserStatus;
+
 public class MainActivity extends AppCompatActivity{
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
@@ -92,4 +94,22 @@ public class MainActivity extends AppCompatActivity{
                 mDrawerToggle.syncState();
 
     }
+
+//   /* @Override
+//    protected void onPause() {
+//        super.onPause();
+//        UserStatus(false);
+//    }
+//
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        UserStatus(true);
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        UserStatus(true);
+//    }*/
 }

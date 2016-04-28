@@ -3,6 +3,7 @@ package com.Utils;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.quy2016.doantotnghiep.R;
 import com.model.ProfileUser;
@@ -54,6 +55,12 @@ public class FriendListAdapter extends ParseQueryAdapter<ProfileUser> {
         userName.setText(object.getAuthorName());
         TextView school = (TextView) v.findViewById(R.id.user_school);
         school.setText(object.getSchool());
+        ImageView status = (ImageView) v.findViewById(R.id.arrow);
+        if(object.getBoolean("Online"))
+            status.setImageResource(R.drawable.online);
+        else
+            status.setImageResource(R.drawable.off);
+
         return v;
 
     }

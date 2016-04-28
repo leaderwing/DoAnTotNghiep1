@@ -3,6 +3,7 @@ package com.hust.chat;
 import com.Utils.Const;
 import com.Utils.FriendListAdapter;
 import com.hust.friend_find.FriendListFragment;
+import com.model.ProfileUser;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -12,7 +13,7 @@ import java.util.Date;
 /**
  * Created by QUY2016 on 4/27/2016.
  */
-@ParseClassName("chat_data")
+@ParseClassName("Chat_data")
 public class Conversation extends ParseObject {
     private String msg;
 
@@ -24,6 +25,7 @@ public class Conversation extends ParseObject {
 
     /** The sender. */
     private String sender;
+    private ProfileUser profileUser;
 
     public Conversation()
     {
@@ -61,8 +63,8 @@ public class Conversation extends ParseObject {
      *
      * @return the sender
      */
-    public ParseUser getSender() {
-        return getParseUser("username");
+    public String getSender() {
+        return getString("sender");
     }
 
     /**
@@ -70,10 +72,14 @@ public class Conversation extends ParseObject {
      *
      * @param sender the new sender
      */
-    public void setSender(ParseUser sender) {
-        put("username",sender);
+    public void setSender(String sender) {
+        put("sender",sender);
     }
 
+    public boolean isSent()
+    {
+        return profileUser.getEmail().equals(sender);
+    }
     /**
      * Gets the status.
      *

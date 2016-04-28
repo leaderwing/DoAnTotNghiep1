@@ -47,6 +47,8 @@
             android:launchMode="singleTop"
             android:parentActivityName="com.hust.forum.DetailTopicsActivity"
             />
+        <activity android:name="com.hust.chat.ChatActivity"
+            android:launchMode="singleTop" />
         <activity android:name="com.hust.forum.FilterResultFragment"
             android:parentActivityName=".MainActivity"
             >

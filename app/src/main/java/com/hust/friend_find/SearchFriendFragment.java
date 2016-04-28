@@ -243,6 +243,12 @@ public class SearchFriendFragment extends Fragment{
                 holder.userName = (TextView) convertView.findViewById(R.id.user_name);
                 holder.user_school = (TextView) convertView.findViewById(R.id.user_school);
                 holder.add_friend = (ImageButton) convertView.findViewById(R.id.add);
+                holder.add_friend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
 
                 convertView.setTag(holder);
 

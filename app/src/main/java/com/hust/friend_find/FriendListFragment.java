@@ -31,6 +31,7 @@ public class FriendListFragment extends Fragment {
     private List<ProfileUser> users ;
     ListView listFriend;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,11 +40,13 @@ public class FriendListFragment extends Fragment {
         friendListAdapter = new FriendListAdapter(getContext());
         friendListAdapter.loadObjects();
         listFriend.setAdapter(friendListAdapter);
+        users = new ArrayList<>();
         listFriend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity() , "View :" +users.get(position).getEmail().toString() , Toast.LENGTH_SHORT ).show();
+                startActivity(new Intent(getActivity() ,ChatActivity.class ).putExtra(Const.EXTRA_DATA_SEND ,users.get(position).getEmail().toString()));
+                //Toast.makeText(getActivity() , "View :" +users.get(position).getEmail().toString() , Toast.LENGTH_SHORT ).show();
             }
         });
         return view;

@@ -13,4 +13,5 @@ public class Const {
 
     /** The Constant STATUS_FAILED. */
     public static final int STATUS_FAILED = 2;
+    public static final String EXTRA_DATA_SEND = "extra_data";
 }
