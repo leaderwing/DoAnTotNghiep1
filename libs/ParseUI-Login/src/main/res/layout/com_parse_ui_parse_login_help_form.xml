@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         style="@style/ParseLoginUI.TextView"
         android:gravity="center"
+        android:textColor="#232121"
         android:text="@string/com_parse_ui_login_help_instructions" />
 
     <EditText
@@ -18,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/com_parse_ui_xlarge_vertical_spacing"
+        android:textColor="#232323"
         android:hint="@string/com_parse_ui_login_help_email_input_hint"
         android:inputType="textEmailAddress" />
 

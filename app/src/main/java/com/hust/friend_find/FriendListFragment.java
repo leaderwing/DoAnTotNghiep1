@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,8 +29,8 @@ import java.util.List;
 public class FriendListFragment extends Fragment {
     private FriendListAdapter friendListAdapter;
     private ParseQueryAdapter<ProfileUser> mainAdapter;
-    private List<ProfileUser> users ;
     ListView listFriend;
+    private LinearLayout noFriendView;
 
 
     @Nullable
@@ -37,15 +38,17 @@ public class FriendListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.list_item_friends,null);
         listFriend = (ListView) view.findViewById(R.id.listFriend);
+        noFriendView = (LinearLayout) view.findViewById(R.id.no_friend_view);
+        listFriend.setEmptyView(noFriendView);
         friendListAdapter = new FriendListAdapter(getContext());
         friendListAdapter.loadObjects();
+        ListView listFriend = (ListView) view.findViewById(R.id.listFriend);
         listFriend.setAdapter(friendListAdapter);
-        users = new ArrayList<>();
         listFriend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity() ,ChatActivity.class ).putExtra(Const.EXTRA_DATA_SEND ,users.get(position).getEmail().toString()));
+                startActivity(new Intent(getActivity() ,ChatActivity.class ).putExtra(Const.EXTRA_DATA_SEND ,friendListAdapter.getItem(position).getEmail()));
                 //Toast.makeText(getActivity() , "View :" +users.get(position).getEmail().toString() , Toast.LENGTH_SHORT ).show();
             }
         });

@@ -46,7 +46,7 @@ public class Conversation extends ParseObject {
 
 
     public Date getDate() {
-        return getCreatedAt();
+        return getDate("createdAt");
     }
 
     /**
@@ -70,16 +70,25 @@ public class Conversation extends ParseObject {
     /**
      * Sets the sender.
      *
+     * @param receiver the new sender
+     */
+    public void setReceiver(String receiver) {
+        put("receiver",receiver);
+    }
+
+    public String getReceiver() {
+        return getString("receiver");
+    }
+
+    /**
+     * Sets the sender.
+     *
      * @param sender the new sender
      */
     public void setSender(String sender) {
         put("sender",sender);
     }
 
-    public boolean isSent()
-    {
-        return profileUser.getEmail().equals(sender);
-    }
     /**
      * Gets the status.
      *

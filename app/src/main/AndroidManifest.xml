@@ -48,6 +48,7 @@
             android:parentActivityName="com.hust.forum.DetailTopicsActivity"
             />
         <activity android:name="com.hust.chat.ChatActivity"
+            android:label="Tro chuyen"
             android:launchMode="singleTop" />
         <activity android:name="com.hust.forum.FilterResultFragment"
             android:parentActivityName=".MainActivity"

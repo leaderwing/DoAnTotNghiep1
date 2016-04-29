@@ -33,7 +33,6 @@ public class FriendsFragment extends Fragment implements TabHost.OnTabChangeList
     public void onAttach(Activity activity) {
         super.onAttach(activity);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +50,7 @@ public class FriendsFragment extends Fragment implements TabHost.OnTabChangeList
         // manually start loading stuff in the first tab
         updateTab(TAB_LIST, R.id.tab_1);
     }
+
 
     private void setupTabs() {
         mTabHost.setup(); // you must call this before adding your tabs!

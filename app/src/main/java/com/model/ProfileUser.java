@@ -22,11 +22,11 @@ public class ProfileUser extends ParseObject {
     {
         put("Name",user);
     }
-    public  ParseUser getEmail()
+    public  String getEmail()
     {
-        return getParseUser("Email");
+        return getString("Email");
     }
-    public  void setEmail(ParseUser user)
+    public  void setEmail(String user)
     {
         put("Email",user);
     }
@@ -78,7 +78,7 @@ public class ProfileUser extends ParseObject {
     {
         return getString("user_address");
     }
-    public  void setEmail(String user_address)
+    public  void setAddress(String user_address)
     {
         put("user_address",user_address);
     }

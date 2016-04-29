@@ -8,6 +8,7 @@
     <string name="tab_finds_gps">TÌM KIẾM GPS</string>
     <string name="dialog_title">SAVING DATA...</string>
     <string name="dialog_load">LOADING DATA...</string>
+    <string name="no_friend">BẠN CHƯA CÓ BẤT KỲ BẠN NÀO TRONG DANH SÁCH</string>
     <array name="category">
         <item name="01" >Hỏi đáp sinh viên</item>
         <item name="02">Giải trí</item>
