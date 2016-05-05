@@ -24,9 +24,11 @@
         <menu>
             <item
                 android:title="Thông tin ứng dụng"
+                android:id="@+id/app_info"
                 android:icon="@drawable/info"/>
             <item
                 android:title="Phản hồi"
+                android:id="@+id/feedback"
                 android:icon="@drawable/inb"/>
         </menu>
     </item>

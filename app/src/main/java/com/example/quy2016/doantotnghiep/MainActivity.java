@@ -15,8 +15,6 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginActivity;
 
-import static com.Utils.Utils.UserStatus;
-
 public class MainActivity extends AppCompatActivity{
     DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
@@ -59,6 +57,18 @@ public class MainActivity extends AppCompatActivity{
                  if (menuItem.getItemId() == R.id.nav_item_profile) {
                      FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                      fragmentTransaction.replace(R.id.containerView,new ProfileFragment()).commit();
+                 }
+                 if (menuItem.getItemId() == R.id.nav_item_profile) {
+                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                     fragmentTransaction.replace(R.id.containerView,new ProfileFragment()).commit();
+                 }
+                 if (menuItem.getItemId() == R.id.app_info) {
+                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                     fragmentTransaction.replace(R.id.containerView,new AppInfoFragment()).commit();
+                 }
+                 if (menuItem.getItemId() == R.id.feedback) {
+                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                     fragmentTransaction.replace(R.id.containerView,new FeedBackFragment()).commit();
                  }
 
                 if (menuItem.getItemId() == R.id.nav_item_notify) {

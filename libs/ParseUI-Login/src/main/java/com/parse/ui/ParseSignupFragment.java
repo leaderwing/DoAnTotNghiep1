@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -178,7 +179,7 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
     } else if (name != null && name.length() == 0 && config.isParseSignupNameFieldEnabled()) {
       showToast(R.string.com_parse_ui_no_name_toast);
     } else {
-      ParseUser user = new ParseUser();
+      final ParseUser user = new ParseUser();
 
       // Set standard fields
       user.setUsername(username);
@@ -202,6 +203,9 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
           if (e == null) {
             loadingFinish();
             signupSuccess();
+            ParseObject object = ParseObject.create("user_details");
+            object.put("user",user);
+            object.saveInBackground();
           } else {
             loadingFinish();
             if (e != null) {

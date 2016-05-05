@@ -4,23 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.Utils.Const;
-import com.Utils.FriendListAdapter;
+import com.utils.Const;
+import com.utils.FriendListAdapter;
 import com.example.quy2016.doantotnghiep.R;
 import com.hust.chat.ChatActivity;
 import com.model.ProfileUser;
+import com.parse.ParseException;
 import com.parse.ParseQueryAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,8 +27,9 @@ import java.util.List;
 public class FriendListFragment extends Fragment {
     private FriendListAdapter friendListAdapter;
     private ParseQueryAdapter<ProfileUser> mainAdapter;
+    private List<ProfileUser> users ;
     ListView listFriend;
-    private LinearLayout noFriendView;
+    LinearLayout noFriendView;
 
 
     @Nullable
@@ -44,12 +43,17 @@ public class FriendListFragment extends Fragment {
         friendListAdapter.loadObjects();
         ListView listFriend = (ListView) view.findViewById(R.id.listFriend);
         listFriend.setAdapter(friendListAdapter);
+       // users = new ArrayList<>();
         listFriend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity() ,ChatActivity.class ).putExtra(Const.EXTRA_DATA_SEND ,friendListAdapter.getItem(position).getEmail()));
-                //Toast.makeText(getActivity() , "View :" +users.get(position).getEmail().toString() , Toast.LENGTH_SHORT ).show();
+                try {
+                    startActivity(new Intent(getActivity() ,ChatActivity.class ).putExtra(Const.EXTRA_DATA_SEND ,friendListAdapter.getItem(position).getUser().fetchIfNeeded().getUsername()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                //Toast.makeText(getActivity() , "View :" + friendListAdapter.getItem(position).getEmail() , Toast.LENGTH_SHORT ).show();
             }
         });
         return view;
