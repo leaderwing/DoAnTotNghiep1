@@ -67,10 +67,17 @@ public class ProfileUser extends ParseObject {
     {
         return getString("user_address");
     }
+    public ParseFile getThumbnail() {
+        return getParseFile("thumbnail_avatar");
+    }
+    public void setThumbnail(ParseFile file) {
+        put("thumbnail_avatar", file);
+    }
     public ParseFile getPhotoFile() {
         return getParseFile("user_avatar");
     }
     public void setPhotoFile(ParseFile file) {
         put("user_avatar", file);
     }
+
 }

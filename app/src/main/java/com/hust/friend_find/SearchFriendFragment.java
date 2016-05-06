@@ -260,7 +260,7 @@ public class SearchFriendFragment extends Fragment{
                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                        if(isChecked)
                        {
-                           ParseObject parseObject = ParseObject.create("User_comments");
+                           ParseObject parseObject = ParseObject.create("User_friends");
                            parseObject.put("from_user", ParseUser.getCurrentUser());
                            parseObject.put("relation","follow");
                            parseObject.put("to_user",userResult.get(position).getParseUser("user"));

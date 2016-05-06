@@ -114,7 +114,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#727272" />
 
-            <Button
+            <ToggleButton
                 android:id="@+id/btnEmail"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -124,6 +124,8 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:background="@drawable/composea"
+                android:checked="false"
+                android:textOff=""
                 android:padding="6dp"
                  />
 
@@ -142,7 +144,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/calendar"
+                android:src="@drawable/birth"
                  />
 
             <EditText
@@ -188,6 +190,66 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/ivContactItem9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/birth"
+                />
+
+            <EditText
+                android:id="@+id/tvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/ivContactItem9"
+                android:layout_toRightOf="@id/ivContactItem9"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:inputType="date"
+                android:focusable="false"
+                android:textColor="#212121" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvAddress"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/ivContactItem9"
+                android:layout_toRightOf="@id/ivContactItem9"
+                android:text="Ngày sinh"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#727272" />
+
+            <ToggleButton
+                android:id="@+id/btnAddress"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:background="@drawable/toggle_button"
+                android:checked="false"
+                android:textOff=""
+                android:textOn="Save successfully!"
+                android:padding="6dp" />
+
+        </RelativeLayout>
+
 
         <include layout="@layout/item_divider" />
 
@@ -205,9 +267,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/draft" />
+                android:src="@drawable/school" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/tvSchool"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -218,7 +280,6 @@
                 android:layout_toRightOf="@id/ivContactItem3"
                 android:layout_toStartOf="@+id/btnSchool"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:focusable="false"
                 android:textColor="#212121" />
@@ -267,10 +328,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/draft"
-                android:visibility="invisible" />
+                android:src="@drawable/course"
+                />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/tvCourse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -281,8 +342,6 @@
                 android:layout_toRightOf="@id/ivContactItem4"
                 android:layout_toStartOf="@+id/btnCourse"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Khóa 56"
                 android:focusable="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
@@ -333,7 +392,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@android:drawable/star_big_off" />
+                android:src="@drawable/hobby" />
 
             <EditText
                 android:id="@+id/tvHobby"
@@ -395,8 +454,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/draft"
-                android:visibility="invisible" />
+                android:src="@drawable/character"
+                />
 
             <EditText
                 android:id="@+id/tvCharacter"

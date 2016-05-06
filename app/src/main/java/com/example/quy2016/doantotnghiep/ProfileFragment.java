@@ -8,21 +8,27 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -34,6 +40,7 @@ import com.parse.GetCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -50,16 +57,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import com.utils.Utils;
 
 /**
  * Created by Ratan on 7/29/2015.
  */
 public class ProfileFragment extends Fragment
 {
-    EditText tvName , tvEmail,tvCourse,tvSchool,tvHobby,tvCharacter,tvBirthday;
-    ToggleButton btnName,btnEmail,btnBirth,btnCourse,btnSchool,btnHobby,btnCharacter;
+    EditText tvName ,tvHobby, tvEmail,tvCharacter,tvBirthday,tvAddress;
+    AutoCompleteTextView tvCourse , tvSchool ;
+    ToggleButton btnName,btnEmail,btnBirth,btnCourse,btnSchool,btnHobby,btnCharacter,btnAddress;
     Button btnSave;
-    ImageView avatar;
+    ParseImageView avatar;
     ImageButton imgUpload;
     ProfileUser profileUser;
     public  static  final  int SELECT_PICTURE = 1000;
@@ -75,17 +84,19 @@ public class ProfileFragment extends Fragment
 
         tvName = (EditText) view.findViewById(R.id.tvName);
         tvEmail = (EditText) view.findViewById(R.id.tvEmail);
-        tvCourse = (EditText) view.findViewById(R.id.tvCourse);
+        tvCourse = (AutoCompleteTextView) view.findViewById(R.id.tvCourse);
         tvBirthday = (EditText) view.findViewById(R.id.tvBirth);
-        tvSchool = (EditText) view.findViewById(R.id.tvSchool);
+        tvSchool = (AutoCompleteTextView) view.findViewById(R.id.tvSchool);
         tvHobby = (EditText) view.findViewById(R.id.tvHobby);
         tvCharacter = (EditText) view.findViewById(R.id.tvCharacter);
-        avatar = (ImageView) view.findViewById(R.id.avatar_profile);
-        // btnEmail = (ToggleButton) view.findViewById(R.id.btnEmail);
+        avatar = (ParseImageView) view.findViewById(R.id.avatar_profile);
+        tvAddress = (EditText) view.findViewById(R.id.tvAddress);
+        btnEmail = (ToggleButton) view.findViewById(R.id.btnEmail);
         btnBirth = (ToggleButton) view.findViewById(R.id.btnBirthday);
         btnCourse = (ToggleButton) view.findViewById(R.id.btnCourse);
         btnSchool = (ToggleButton) view.findViewById(R.id.btnSchool);
         btnHobby = (ToggleButton) view.findViewById(R.id.btnHobby);
+        btnAddress = (ToggleButton) view.findViewById(R.id.btnAddress);
         btnCharacter = (ToggleButton) view.findViewById(R.id.btnCharacter);
         btnName = (ToggleButton) view.findViewById(R.id.btnName);
         btnSave = (Button) view.findViewById(R.id.btnSave);
@@ -103,21 +114,47 @@ public class ProfileFragment extends Fragment
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                Bitmap bitmap = Utils.decodeSampledBitmapFromFile(selectedImagePath ,250,250);
+                //Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                Bitmap rotateImage = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+                Bitmap thumbnailPic = Bitmap.createScaledBitmap(rotateImage,86,86,false);
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 // Compress image to lower quality scale 1 - 100
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] image = stream.toByteArray();
-                final ParseFile file = new ParseFile("user_avatar", image);
+                rotateImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                byte[] image = bos.toByteArray();
+                bos.reset();
+                thumbnailPic.compress(Bitmap.CompressFormat.PNG,100,bos);
+                byte[] thumbnail_avatar = bos.toByteArray();
+                try {
+                    // close the byte array output stream
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                 final ParseFile file = new ParseFile("user_avatar.png", image);
+                 final ParseFile thumbnail = new ParseFile("thumbnail_avatar.png",thumbnail_avatar);
                 // Upload the image into Parse Cloud
                 ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
-                profileUser = new ProfileUser();
                 query1.whereEqualTo("user",ParseUser.getCurrentUser());
-                query1.getInBackground(profileUser.getObjectId(), new GetCallback<ParseObject>() {
+                query1.findInBackground(new FindCallback<ParseObject>() {
                     @Override
-                    public void done(ParseObject object, ParseException e) {
-                        object.put("user_avatar",file);
-                        object.saveInBackground();
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        for (ParseObject object : objects) {
+                            profileUser = new ProfileUser();
+                            profileUser.setObjectId(object.getObjectId());
+                            ParseQuery<ParseObject> query11 = ParseQuery.getQuery("user_details");
+                            query11.getInBackground(profileUser.getObjectId(), new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject object, ParseException e) {
+                                    object.put("user_avatar", file);
+                                    object.put("thumbnail_avatar", thumbnail);
+                                    object.saveInBackground();
+                                }
+                            });
+                        }
                     }
                 });
 
@@ -158,13 +195,14 @@ public class ProfileFragment extends Fragment
                     profileUser.setHobbies(object.getString("user_hobbies"));
                     profileUser.setObjectId(object.getObjectId());
                    // profileUser.setbjectId(object.getObjectId());
-                    //if(!object.getParseFile("user_avatar").isDirty())
-                   // profileUser.setPhotoFile(object.getParseFile("user_avatar"));
+                    if(!object.getParseFile("user_avatar").isDirty())
+                    profileUser.setPhotoFile(object.getParseFile("user_avatar"));
                     tvBirthday.setText(profileUser.getBirthday());
                     tvCourse.setText(profileUser.getCourse());
                     tvSchool.setText(profileUser.getSchool());
                     tvHobby.setText(profileUser.getHobbies());
                     tvCharacter.setText(profileUser.getCharacter());
+                    avatar.setParseFile(profileUser.getPhotoFile());
                    // avatar.setImageBitmap(profileUser.getPhotoFile().);
                 }
             }
@@ -185,6 +223,27 @@ public class ProfileFragment extends Fragment
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         object.put("name" ,tvName.getText().toString());
+                        object.saveInBackground();
+                    }
+                });
+
+            }
+        });
+        btnEmail.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    tvEmail.setFocusableInTouchMode(true);
+
+                } else {
+                    tvEmail.setFocusableInTouchMode(false);
+                    tvEmail.setFocusable(false);
+                }
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+                query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        object.put("email" ,tvEmail.getText().toString());
                         object.saveInBackground();
                     }
                 });
@@ -215,6 +274,39 @@ public class ProfileFragment extends Fragment
                                 @Override
                                 public void done(ParseObject object, ParseException e) {
                                     object.put("user_birthday", tvBirthday.getText().toString());
+                                    object.saveInBackground();
+                                }
+                            });
+                        }
+                    }
+                });
+
+            }
+        });
+        btnAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    tvAddress.setFocusableInTouchMode(true);
+                    showDatePickerDialog();
+                } else {
+                    tvAddress.setFocusableInTouchMode(false);
+                    tvAddress.setFocusable(false);
+                }
+
+                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+                query1.whereEqualTo("user",ParseUser.getCurrentUser());
+                query1.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        for (ParseObject object : objects) {
+                            profileUser = new ProfileUser();
+                            profileUser.setObjectId(object.getObjectId());
+                            ParseQuery<ParseObject> query11 = ParseQuery.getQuery("user_details");
+                            query11.getInBackground(profileUser.getObjectId(), new GetCallback<ParseObject>() {
+                                @Override
+                                public void done(ParseObject object, ParseException e) {
+                                    object.put("user_address", tvAddress.getText().toString());
                                     object.saveInBackground();
                                 }
                             });
@@ -261,7 +353,11 @@ public class ProfileFragment extends Fragment
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     tvCourse.setFocusableInTouchMode(true);
-                    isChecked = false;
+                    tvCourse.addTextChangedListener((TextWatcher) getContext());
+                    tvCourse.setAdapter(new ArrayAdapter<String>(
+                                            getActivity(),
+                                            android.R.layout.simple_list_item_1,getResources().getStringArray(R.array.school)));
+
                 } else {
                     tvCourse.setFocusableInTouchMode(false);
                     tvCourse.setFocusable(false);
@@ -322,6 +418,7 @@ public class ProfileFragment extends Fragment
 
             }
         });
+
         btnSchool.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -428,5 +525,15 @@ public class ProfileFragment extends Fragment
         pic.setTitle("Chọn ngày sinh");
         pic.show();
     }
+    public void onTextChanged(CharSequence arg0, int arg1,
+                              int arg2, int arg3) {
+        selection.setText(tvSchool.getText());
+    }
+    public void afterTextChanged(Editable arg0) {
+    }
+    public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                  int arg3) {
+    }
+
 
 }

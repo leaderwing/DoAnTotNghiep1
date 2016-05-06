@@ -20,4 +20,33 @@
     <string name="intro"><b>Hust communication</b> là một ứng dụng Android dành cho sinh viên Đại học Bách Khoa Hà Nội .Ứng dụng là nơi các sinh viên Bách khoa cập nhật các tin tức về học tập , đồng thời cũng là nơi để các sinh viên có thể giao lưu kế bạn học hỏi kinh nghiệm.
     Ứng dụng sẽ giúp các sinh viên Bách Khoa gần gũi nhau hơn , góp phần nâng cao hiệu quả trong học tập cũng như trong cuộc sống
     </string>
+    <array name="school" >
+        <item>Viện CNTT-TT</item>
+        <item>Viện Cơ khí</item>
+        <item>Viện Cơ khí động lực</item>
+        <item>Viện Công nghệ sinh học và Công nghệ thực phẩm</item>
+        <item>Viện Dệt may- Da giầy và thời trang</item>
+        <item>Viện Khoa học và Công nghệ Môi trường</item>
+        <item> Viện Khoa học và Công nghệ Nhiệt lạnh</item>
+        <item>Viện Khoa học và Công nghệ Vật liệu</item>
+        <item> Viện Kinh tế và Quản lý</item>
+        <item> Viện Kỹ thuật hạt nhân và Vật lý Môi trường</item>
+        <item> Viện Kỹ thuật Hóa học</item>
+        <item> Viện Ngoại ngữ</item>
+        <item> Viện Sư phạm kỹ thuật</item>
+        <item>Viện Toán Ứng Dụng và Tin học</item>
+        <item> Viện Vật lý kỹ thuật</item>
+        <item>Viện Điện</item>
+        <item> Viện Điện tử - Viễn thông</item>
+        <item> Viện Kỹ thuật Điều khiển và Tự động hóa</item>
+        <item> Viện Tiên tiến Khoa học và Công nghệ (AIST)</item>
+        <item> Viện Đào tạo Quốc tế về Khoa học vật liệu (ITIMS)</item>
+        <item> Viện NCQT về KH và KT tính toán</item>
+        <item> Viện Nghiên cứu  Công nghệ Không gian và Dưới nước</item>
+        <item>Viện Khoa học Công nghệ Quốc tế Việt Nam – Nhật Bản</item>
+        <item> Viện Đào tạo Quốc tế (SIE)</item>
+        <item> Viện Đào tạo liên tục</item>
+        <item> Viện Đào tạo Sau đại học</item>
+
+    </array>
 </resources>
