@@ -1,6 +1,8 @@
 package com.utils;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import com.model.Post_Info;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -57,7 +61,10 @@ public class PostInfoAdapter extends RecyclerView.Adapter<PostInfoAdapter.MyView
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        //holder.date.setText(post_info.getDate().toString());
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String s = formatter.format(post_info.getDate());
+        Log.d("TAG" , s);
+        holder.date.setText(s);
         holder.viewNum.setText(String.valueOf(post_info.getNumberPost()));
         holder.commentNum.setText(String.valueOf(post_info.getNumberPost()));
     }

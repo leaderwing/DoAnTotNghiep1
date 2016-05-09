@@ -68,7 +68,7 @@ public class Post_Info extends ParseObject {
     }
 
     public Date getDate() {
-        return getCreatedAt();
+        return getDate("createdAt");
     }
     public void setDate(Date date)
     {

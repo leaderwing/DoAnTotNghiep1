@@ -30,6 +30,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +90,6 @@ public class MainPostActivity extends AppCompatActivity {
                        return false;
                    }
                });
-            view.setVisibility(View.VISIBLE);
                 btnAddCmt.setVisibility(View.VISIBLE);
                 btnAddCmt.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -112,6 +112,7 @@ public class MainPostActivity extends AppCompatActivity {
                                         addComment.setVisibility(View.INVISIBLE);
                                         btnAddCmt.setVisibility(View.INVISIBLE);
                                         create_cmt.setVisibility(View.VISIBLE);
+                                        view.setVisibility(View.VISIBLE);
                                        // commentAdapter.insert(commentAdapter.getItemCount(),commentsList.get(commentAdapter.getItemCount()));
                                         clearData();
                                         LoadComments();
@@ -143,9 +144,10 @@ public class MainPostActivity extends AppCompatActivity {
                         } catch (ParseException e1) {
                             e1.printStackTrace();
                         }
+                        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                        txtCreated.setText(formatter.format(object.getCreatedAt()));
                         txtTitle.setText(object.getString("Title"));
                         txtContent.setText(object.getString("Describe"));
-
                     }
 
                 }

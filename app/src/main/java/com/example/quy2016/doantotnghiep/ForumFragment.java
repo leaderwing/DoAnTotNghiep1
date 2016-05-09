@@ -115,7 +115,7 @@ public class ForumFragment extends Fragment {
     {
         int numUser = 0;
         ParseQuery<ParseUser> newQuery = ParseQuery.getQuery("user_details");
-        newQuery.whereEqualTo("Course",course);
+        newQuery.whereEqualTo("course",course);
         try {
             numUser = newQuery.count();
         } catch (ParseException e) {

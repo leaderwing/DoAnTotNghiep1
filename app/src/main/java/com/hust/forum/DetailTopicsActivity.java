@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -142,6 +143,8 @@ public class DetailTopicsActivity extends AppCompatActivity {
                         Post_Info post_info = new Post_Info();
                         post_info.setUser(po.getParseUser("user"));
                         post_info.setObjectId(po.getObjectId());
+                        Log.d("TIME :" , String.valueOf(po.getCreatedAt()));
+                        post_info.setDate(po.getCreatedAt());
                         post_info.setDescribe(po.getString("Describe"));
                         post_info.setTitle(po.getString("Title"));
                         post_info.setNumberPost(po.getInt("Post_Num_Comment"));

@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.quy2016.doantotnghiep.R;
 import com.model.ProfileUser;
+import com.model.UserFriends;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -14,6 +15,8 @@ import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+
+import java.util.Arrays;
 
 /**
  * Created by Administrator on 4/21/2016.
@@ -25,10 +28,11 @@ public class FriendListAdapter extends ParseQueryAdapter<ProfileUser> {
             public ParseQuery<ProfileUser> create() {
                 // Here we can configure a ParseQuery to display
                 // only top-rated meals.
+                ParseQuery<UserFriends> innerQuery = new ParseQuery<UserFriends>("User_friends");
+                innerQuery.whereMatches("relation","follow");
+                innerQuery.whereEqualTo("from_user",ParseUser.getCurrentUser());
                 ParseQuery query = new ParseQuery("user_details");
-                query.whereNotEqualTo("user", ParseUser.getCurrentUser());
-                //query.whereContainedIn("rating", Arrays.asList("5", "4"));
-                //query.orderByDescending("rating");
+                query.whereDoesNotMatchKeyInQuery("user","to_user",innerQuery);
                 return query;
             }
         });
@@ -62,6 +66,7 @@ public class FriendListAdapter extends ParseQueryAdapter<ProfileUser> {
         TextView school = (TextView) v.findViewById(R.id.user_school);
         school.setText(object.getSchool());
         ImageView status = (ImageView) v.findViewById(R.id.arrow);
+
         if(object.getBoolean("Online"))
             status.setImageResource(R.drawable.online);
         else

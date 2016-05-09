@@ -26,8 +26,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/user32"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                android:layout_alignTop="@+id/tvName"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <EditText
                 android:id="@+id/tvName"
@@ -38,7 +39,7 @@
                 android:layout_toEndOf="@id/ivContactItem1"
                 android:layout_toRightOf="@id/ivContactItem1"
                 android:layout_marginBottom="16dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:focusable="false"
                 android:textColor="#212121" />
 
@@ -62,13 +63,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:background="@drawable/toggle_button"
                 android:checked="false"
                 android:textOff=""
-                android:textOn="Save successfully!"
-                android:padding="6dp" />
+                android:textOn=""
+                 />
 
         </RelativeLayout>
 
@@ -97,7 +96,7 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivContactItem2"
                 android:layout_toRightOf="@id/ivContactItem2"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:focusable="false"
                 android:textColor="#212121" />
 
@@ -155,7 +154,7 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivContactItem7"
                 android:layout_toRightOf="@id/ivContactItem7"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:inputType="date"
                 android:focusable="false"
                 android:textColor="#212121" />
@@ -185,7 +184,7 @@
                 android:background="@drawable/toggle_button"
                 android:checked="false"
                 android:textOff=""
-                android:textOn="Save successfully!"
+                android:textOn=""
                 android:padding="6dp" />
 
         </RelativeLayout>
@@ -204,7 +203,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/birth"
+                android:src="@drawable/address"
                 />
 
             <EditText
@@ -215,8 +214,7 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivContactItem9"
                 android:layout_toRightOf="@id/ivContactItem9"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:inputType="date"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:focusable="false"
                 android:textColor="#212121" />
 
@@ -229,7 +227,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivContactItem9"
                 android:layout_toRightOf="@id/ivContactItem9"
-                android:text="Ngày sinh"
+                android:text="Địa chỉ"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#727272" />
 
@@ -245,7 +243,7 @@
                 android:background="@drawable/toggle_button"
                 android:checked="false"
                 android:textOff=""
-                android:textOn="Save successfully!"
+                android:textOn=""
                 android:padding="6dp" />
 
         </RelativeLayout>
@@ -280,7 +278,7 @@
                 android:layout_toRightOf="@id/ivContactItem3"
                 android:layout_toStartOf="@+id/btnSchool"
                 android:ellipsize="end"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:focusable="false"
                 android:textColor="#212121" />
 
@@ -309,7 +307,7 @@
                 android:background="@drawable/toggle_button"
                 android:checked="false"
                 android:textOff=""
-                android:textOn="Save successfully!"
+                android:textOn=""
                 android:padding="6dp" />
 
         </RelativeLayout>
@@ -343,7 +341,7 @@
                 android:layout_toStartOf="@+id/btnCourse"
                 android:ellipsize="end"
                 android:focusable="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
 
             <TextView
@@ -407,7 +405,7 @@
                 android:ellipsize="end"
                 android:focusable="false"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
 
             <TextView
@@ -435,7 +433,7 @@
                 android:background="@drawable/toggle_button"
                 android:checked="false"
                 android:textOff=""
-                android:textOn="Save successfully!"
+                android:textOn=""
                 android:padding="6dp" />
 
         </RelativeLayout>
@@ -470,7 +468,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:focusable="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="#212121" />
 
             <TextView
@@ -498,7 +496,7 @@
                 android:background="@drawable/toggle_button"
                 android:checked="false"
                 android:textOff=""
-                android:textOn="Save successfully!"
+                android:textOn=""
                 android:padding="6dp" />
 
         </RelativeLayout>

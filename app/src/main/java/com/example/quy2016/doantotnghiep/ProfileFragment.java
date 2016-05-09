@@ -1,22 +1,24 @@
 package com.example.quy2016.doantotnghiep;
 
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,32 +29,22 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.quy2016.doantotnghiep.R;
 import com.model.ProfileUser;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
-import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -69,6 +61,7 @@ public class ProfileFragment extends Fragment
     ToggleButton btnName,btnEmail,btnBirth,btnCourse,btnSchool,btnHobby,btnCharacter,btnAddress;
     Button btnSave;
     ParseImageView avatar;
+    ParseFile image , thumbnailImg;
     ImageButton imgUpload;
     ProfileUser profileUser;
     public  static  final  int SELECT_PICTURE = 1000;
@@ -105,59 +98,6 @@ public class ProfileFragment extends Fragment
             @Override
             public void onClick(View v) {
                 openInGallery();
-                final ProgressDialog dialog = new ProgressDialog(getContext());
-                dialog.setMessage(getString(R.string.dialog_title));
-                dialog.show();
-                InputStream imageStream = null;
-                try {
-                    imageStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bitmap = Utils.decodeSampledBitmapFromFile(selectedImagePath ,250,250);
-                //Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-                Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                Bitmap rotateImage = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-                Bitmap thumbnailPic = Bitmap.createScaledBitmap(rotateImage,86,86,false);
-
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                // Compress image to lower quality scale 1 - 100
-                rotateImage.compress(Bitmap.CompressFormat.PNG, 100, bos);
-                byte[] image = bos.toByteArray();
-                bos.reset();
-                thumbnailPic.compress(Bitmap.CompressFormat.PNG,100,bos);
-                byte[] thumbnail_avatar = bos.toByteArray();
-                try {
-                    // close the byte array output stream
-                    bos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                 final ParseFile file = new ParseFile("user_avatar.png", image);
-                 final ParseFile thumbnail = new ParseFile("thumbnail_avatar.png",thumbnail_avatar);
-                // Upload the image into Parse Cloud
-                ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
-                query1.whereEqualTo("user",ParseUser.getCurrentUser());
-                query1.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List<ParseObject> objects, ParseException e) {
-                        for (ParseObject object : objects) {
-                            profileUser = new ProfileUser();
-                            profileUser.setObjectId(object.getObjectId());
-                            ParseQuery<ParseObject> query11 = ParseQuery.getQuery("user_details");
-                            query11.getInBackground(profileUser.getObjectId(), new GetCallback<ParseObject>() {
-                                @Override
-                                public void done(ParseObject object, ParseException e) {
-                                    object.put("user_avatar", file);
-                                    object.put("thumbnail_avatar", thumbnail);
-                                    object.saveInBackground();
-                                }
-                            });
-                        }
-                    }
-                });
-
 
             }
         });
@@ -195,8 +135,10 @@ public class ProfileFragment extends Fragment
                     profileUser.setHobbies(object.getString("user_hobbies"));
                     profileUser.setObjectId(object.getObjectId());
                    // profileUser.setbjectId(object.getObjectId());
-                    if(!object.getParseFile("user_avatar").isDirty())
+                    if(object.getParseFile("user_avatar")!= null)
                     profileUser.setPhotoFile(object.getParseFile("user_avatar"));
+                    else
+                    avatar.setImageResource(R.drawable.fcb);
                     tvBirthday.setText(profileUser.getBirthday());
                     tvCourse.setText(profileUser.getCourse());
                     tvSchool.setText(profileUser.getSchool());
@@ -288,7 +230,6 @@ public class ProfileFragment extends Fragment
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     tvAddress.setFocusableInTouchMode(true);
-                    showDatePickerDialog();
                 } else {
                     tvAddress.setFocusableInTouchMode(false);
                     tvAddress.setFocusable(false);
@@ -353,11 +294,11 @@ public class ProfileFragment extends Fragment
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     tvCourse.setFocusableInTouchMode(true);
-                    tvCourse.addTextChangedListener((TextWatcher) getContext());
+                    //tvCourse.addTextChangedListener((TextWatcher) getContext());
                     tvCourse.setAdapter(new ArrayAdapter<String>(
-                                            getActivity(),
-                                            android.R.layout.simple_list_item_1,getResources().getStringArray(R.array.school)));
-
+                            getActivity(),
+                            android.R.layout.simple_list_item_1,getResources().getStringArray(R.array.course)));
+                    tvCourse.setThreshold(1);
                 } else {
                     tvCourse.setFocusableInTouchMode(false);
                     tvCourse.setFocusable(false);
@@ -424,7 +365,11 @@ public class ProfileFragment extends Fragment
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     tvSchool.setFocusableInTouchMode(true);
-                    isChecked = false;
+                    //tvSchool.addTextChangedListener((TextWatcher) getContext());
+                    tvSchool.setAdapter(new ArrayAdapter<String>(
+                            getActivity(),
+                            android.R.layout.simple_list_item_1,getResources().getStringArray(R.array.school)));
+                    tvSchool.setThreshold(1);
                 } else {
                     tvSchool.setFocusableInTouchMode(false);
                     tvSchool.setFocusable(false);
@@ -478,26 +423,72 @@ public class ProfileFragment extends Fragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
+        if (requestCode == SELECT_PICTURE) {
+            if (resultCode == getActivity().RESULT_OK) {
                 selectedImageUri = data.getData();
+                selectedImageUri = data == null ? null : data.getData();
+                if(selectedImageUri != null)
+                {
+                    String realPath = getPathFromUri(getContext(), selectedImageUri);
+                    savePhotoFile(realPath);
+                    return;
+                }
 
-                selectedImagePath = getPath(selectedImageUri);
-                System.out.println("Image Path : " + selectedImagePath);
-                imgUpload.setImageURI(selectedImageUri);
             }
         }
     }
-    @SuppressWarnings("deprecation")
-    public String getPath(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
+
+    private void savePhotoFile(String realPath) {
+        final ProgressDialog dialog = new ProgressDialog(getContext());
+        dialog.setMessage(getString(R.string.dialog_title));
+        Bitmap bitmap = Utils.decodeSampledBitmapFromFile(realPath ,250,250);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap rotatedImage = Bitmap.createBitmap(bitmap, 0,
+                0, bitmap.getWidth(), bitmap.getHeight(),
+                matrix, true);
+        Bitmap thumbnail = Bitmap.createScaledBitmap(rotatedImage, 86, 86, false);
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        rotatedImage.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        byte[] rotatedData = bos.toByteArray();
+
+        bos.reset(); // reset the stream to prepare for the thumbnail
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        byte[] thumbnailData = bos.toByteArray();
+
+        try {
+            // close the byte array output stream
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        image = new ParseFile("user_avatar.png", rotatedData);
+        thumbnailImg = new ParseFile("thumbnail_avatar.png",thumbnailData);
+        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+        query1.whereEqualTo("user",ParseUser.getCurrentUser());
+        query1.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                for (ParseObject object : objects) {
+                    profileUser = new ProfileUser();
+                    profileUser.setObjectId(object.getObjectId());
+                    ParseQuery<ParseObject> query11 = ParseQuery.getQuery("user_details");
+                    query11.getInBackground(profileUser.getObjectId(), new GetCallback<ParseObject>() {
+                        @Override
+                        public void done(ParseObject object, ParseException e) {
+                            object.put("user_avatar", image);
+                            object.put("thumbnail_avatar", thumbnailImg);
+                            object.saveInBackground();
+                        }
+                    });
+                }
+                dialog.dismiss();
+            }
+        });
 
     }
+
     public void showDatePickerDialog()
     {
         DatePickerDialog.OnDateSetListener callback=new DatePickerDialog.OnDateSetListener() {
@@ -527,13 +518,132 @@ public class ProfileFragment extends Fragment
     }
     public void onTextChanged(CharSequence arg0, int arg1,
                               int arg2, int arg3) {
-        selection.setText(tvSchool.getText());
     }
     public void afterTextChanged(Editable arg0) {
     }
     public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
                                   int arg3) {
     }
+    @SuppressLint("NewApi")
+    public String getPathFromUri(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[] {
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the value of the data column for this Uri. This is useful for
+     * MediaStore Uris, and other file-based ContentProviders.
+     *
+     * @param context The context.
+     * @param uri The Uri to query.
+     * @param selection (Optional) Filter used in the query.
+     * @param selectionArgs (Optional) Selection arguments used in the query.
+     * @return The value of the _data column, which is typically a file path.
+     */
+    public String getDataColumn(Context context, Uri uri, String selection,
+                                String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
 
 
 }

@@ -49,4 +49,17 @@
         <item> Viện Đào tạo Sau đại học</item>
 
     </array>
+    <array name="course">
+        <item>k56</item>
+        <item>k57</item>
+        <item>k58</item>
+        <item>k59</item>
+        <item>k60</item>
+        <item>Khóa khác</item>
+
+    </array>
+    <string name="link">
+        http://stackoverflow.com/questions/26040437/parse-cloud-send-push-to-a-single-user?rq=1
+        http://stackoverflow.com/questions/26827503/parse-sending-push-notification-to-specific-user-from-cloud-code?rq=1
+    </string>
 </resources>

@@ -20,19 +20,23 @@ import android.widget.Toast;
 
 import com.example.quy2016.doantotnghiep.R;
 import com.model.Post_Info;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.utils.Utils;
 
 import org.jsoup.helper.StringUtil;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 4/26/2016.
  */
 public class CreateNewPostActivity extends AppCompatActivity {
-    Button btnPost , btnCancel;
+    Button btnPost , btnCancel , btnUploadFile;
     EditText editTitle , editContent;
     Spinner spinnerCat;
     TextView txtFile;
@@ -45,6 +49,7 @@ public class CreateNewPostActivity extends AppCompatActivity {
         setContentView(R.layout.main_layout_create_post);
         btnPost = (Button) findViewById(R.id.btnPost);
         btnCancel = (Button) findViewById(R.id.btnCancel);
+        btnUploadFile = (Button) findViewById(R.id.btnUploadFile);
         editTitle = (EditText) findViewById(R.id.txtDescribe);
         editContent = (EditText) findViewById(R.id.txtContent);
         txtFile  = (TextView) findViewById(R.id.txtfile);
@@ -54,6 +59,21 @@ public class CreateNewPostActivity extends AppCompatActivity {
         spinnerCat.setAdapter(spinnerAdapter);
         Intent i = getIntent();
         course = i.getStringExtra("khoa_hoc");
+        btnUploadFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Post_Info");
+                query.whereEqualTo("user" , ParseUser.getCurrentUser());
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        for (ParseObject object : objects) {
+
+                        }
+                    }
+                });
+            }
+        });
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
