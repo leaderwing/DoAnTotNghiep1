@@ -147,8 +147,6 @@ public class SearchFriendFragment extends Fragment{
         public String getUserList(String url)
         {
             ParseQuery query =  new ParseQuery("user_details");
-            // query.whereStartsWith("Name",url);
-            // Log.d(query.toString() , "Query :");
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
@@ -157,10 +155,12 @@ public class SearchFriendFragment extends Fragment{
                             // returnResults = new ArrayList();
                             ProfileUser profileUser = new ProfileUser();
                             profileUser.setUser(user.getParseUser("user"));
-                            profileUser.setSchool(user.getString("user_school"));
+                            if (user.getString("user_school")!= null)
+                            profileUser.setSchool(user.getString("user_school").toString());
                             profileUser.setObjectId(user.getObjectId());
-//                            if(!user.getParseFile("user_avatar").isDirty())
-//                            profileUser.setPhotoFile(user.getParseFile("user_avatar"));
+                            if(user.getParseFile("thumbnail_avatar")!= null)
+                            profileUser.setThumbnail(user.getParseFile("thumbnail_avatar"));
+
                             //returnResults.add(profileUser);
                             mathFound = "N";
                             for (int i = 0; i < userResult.size(); i++) {
@@ -245,7 +245,7 @@ public class SearchFriendFragment extends Fragment{
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            ProfileUser user = userDetails.get(position);
+            final ProfileUser user = userDetails.get(position);
             if(convertView == null)
             {
                 convertView = layoutInflater.inflate(R.layout.list_item_friends_search,null);
@@ -263,14 +263,14 @@ public class SearchFriendFragment extends Fragment{
                            ParseObject parseObject = ParseObject.create("User_friends");
                            parseObject.put("from_user", ParseUser.getCurrentUser());
                            parseObject.put("relation","follow");
-                           parseObject.put("to_user",userResult.get(position).getParseUser("user"));
+                           parseObject.put("to_user", userDetails.get(position).getParseUser("user"));
                            parseObject.saveInBackground(new SaveCallback() {
                                @Override
                                public void done(ParseException e) {
                                    Snackbar snackbar = null;
                                    try {
                                        snackbar = Snackbar
-                                               .make(relativeLayout,"Bạn đã thêm "+ userResult.get(position).getParseUser("user").fetchIfNeeded().getString("name")+" vào danh sách theo dõi", Snackbar.LENGTH_LONG);
+                                               .make(relativeLayout, "Bạn đã thêm " + userDetails.get(position).getParseUser("user").fetchIfNeeded().getString("name") + " vào danh sách theo dõi", Snackbar.LENGTH_LONG);
                                    } catch (ParseException e1) {
                                        e1.printStackTrace();
                                    }
@@ -283,7 +283,7 @@ public class SearchFriendFragment extends Fragment{
                        {
                            ParseQuery<ParseObject> newQuery = ParseQuery.getQuery("User_friends");
                            newQuery.whereEqualTo("from_user",ParseUser.getCurrentUser());
-                           newQuery.whereEqualTo("to_user",userResult.get(position).getParseUser("user"));
+                           newQuery.whereEqualTo("to_user",userDetails.get(position).getParseUser("user"));
                            newQuery.getFirstInBackground(new GetCallback<ParseObject>() {
                                @Override
                                public void done(ParseObject object, ParseException e) {
@@ -293,7 +293,7 @@ public class SearchFriendFragment extends Fragment{
                                            Snackbar snackbar = null;
                                            try {
                                                snackbar = Snackbar
-                                                       .make(relativeLayout,"Bạn đã hủy theo dõi "+ userResult.get(position).getParseUser("user").fetchIfNeeded().getString("name"), Snackbar.LENGTH_LONG);
+                                                       .make(relativeLayout,"Bạn đã hủy theo dõi "+ userDetails.get(position).getParseUser("user").fetchIfNeeded().getString("name"), Snackbar.LENGTH_LONG);
                                            } catch (ParseException e1) {
                                                e1.printStackTrace();
                                            }
@@ -330,7 +330,8 @@ public class SearchFriendFragment extends Fragment{
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            holder.user_school.setText(user.getSchool());
+            holder.user_school.setText(user.getSchool()==null ?"" : user.getSchool());
+            holder.avatar.setParseFile(user.getThumbnail());
             return  convertView ;
         }
 

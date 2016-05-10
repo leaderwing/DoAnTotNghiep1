@@ -10,6 +10,7 @@ import com.example.quy2016.doantotnghiep.R;
 import com.model.ProfileUser;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -21,6 +22,7 @@ import java.util.List;
 public class ProfileUserFriendFragment extends FragmentActivity {
     TextView txtUsername , txtUseremail , txtUserbirthday , txtUserschool , txtUsercourse , txtUseraddress, txtUserhobby , txtUsercharacter;
     String userId;
+    ParseImageView useravatar;
     ProfileUser profileUser;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class ProfileUserFriendFragment extends FragmentActivity {
         txtUseraddress = (TextView) findViewById(R.id.tvAddressUser);
         txtUserhobby = (TextView) findViewById(R.id.tvHobbyUser);
         txtUsercharacter = (TextView) findViewById(R.id.tvCharacterUser);
+        useravatar = (ParseImageView) findViewById(R.id.avatar_profile);
         Intent receiveData = getIntent();
         userId = receiveData.getStringExtra("userDetails");
         //txtUsername = (TextView) view.findViewById(R.id.tvNameUser);
@@ -55,6 +58,7 @@ public class ProfileUserFriendFragment extends FragmentActivity {
                         txtUseraddress.setText(po.getString("user_address"));
                         txtUserhobby.setText(po.getString("user_hobbies"));
                         txtUsercharacter.setText(po.getString("user_char"));
+                        useravatar.setParseFile(po.getParseFile("user_avatar"));
 
                     } catch (ParseException e1) {
                         e1.printStackTrace();

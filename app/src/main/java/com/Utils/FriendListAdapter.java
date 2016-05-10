@@ -1,4 +1,4 @@
-package com.utils;
+package com.Utils;
 
 import android.content.Context;
 import android.view.View;
@@ -16,8 +16,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
-import java.util.Arrays;
-
 /**
  * Created by Administrator on 4/21/2016.
  */
@@ -32,7 +30,7 @@ public class FriendListAdapter extends ParseQueryAdapter<ProfileUser> {
                 innerQuery.whereMatches("relation","follow");
                 innerQuery.whereEqualTo("from_user",ParseUser.getCurrentUser());
                 ParseQuery query = new ParseQuery("user_details");
-                query.whereDoesNotMatchKeyInQuery("user","to_user",innerQuery);
+                query.whereMatchesKeyInQuery("user","to_user",innerQuery);
                 return query;
             }
         });
@@ -47,7 +45,7 @@ public class FriendListAdapter extends ParseQueryAdapter<ProfileUser> {
         }
         super.getItemView(object,v,parent);
         ParseImageView profile = (ParseImageView) v.findViewById(R.id.avatar);
-        ParseFile photoFile = object.getPhotoFile();
+        ParseFile photoFile = object.getThumbnail();
         if (photoFile != null) {
             profile.setParseFile(photoFile);
             profile.loadInBackground(new GetDataCallback() {
@@ -75,4 +73,5 @@ public class FriendListAdapter extends ParseQueryAdapter<ProfileUser> {
         return v;
 
     }
+
 }

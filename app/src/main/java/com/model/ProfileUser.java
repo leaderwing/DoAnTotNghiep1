@@ -35,6 +35,7 @@ public class ProfileUser extends ParseObject {
     {
         return getString("user_school");
     }
+
     public  void setSchool(String user_school)
     {
         put("user_school",user_school);

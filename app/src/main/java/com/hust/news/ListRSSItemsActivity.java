@@ -7,28 +7,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.quy2016.doantotnghiep.R;
+import com.Utils.Const;
 
-public class ListRSSItemsActivity extends FragmentActivity {
+public class ListRSSItemsActivity extends AppCompatActivity {
 
     // Progress Dialog
     private ProgressDialog pDialog;
@@ -52,12 +49,13 @@ public class ListRSSItemsActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rss_item_list);
+        Toolbar mTool = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mTool);
         Intent i = getIntent();
         String rss_link = i.getStringExtra("link");
-        /**
-         * Calling a backgroung thread will loads recent articles of a website
-         * @param rss url of website
-         * */
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
         new loadRSSFeedItems().execute(rss_link);
 
         // selecting single ListView item
@@ -77,6 +75,21 @@ public class ListRSSItemsActivity extends FragmentActivity {
                 startActivity(in);
             }
         });
+        switch (rss_link)
+        {
+            case Const.LINK1 :
+                getSupportActionBar().setTitle("Thông báo");
+                break;
+            case Const.LINK2 :
+                getSupportActionBar().setTitle("Tuyển dụng");
+                break;
+            case Const.LINK3 :
+                getSupportActionBar().setTitle("Thông tin đào tạo");
+                break;
+            case Const.LINK4 :
+                getSupportActionBar().setTitle("Xử lý học tập");
+
+        }
     }
 
     /**

@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Chọn danh mục"
+        android:text="Danh mục:  "
         android:id="@+id/textView4"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -26,6 +26,7 @@
         android:prompt="@string/default_string"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+
         android:layout_toRightOf="@+id/textView4"
         android:layout_toEndOf="@+id/textView4" />
 

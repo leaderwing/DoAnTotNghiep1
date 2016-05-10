@@ -1,4 +1,4 @@
-package com.utils;
+package com.Utils;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

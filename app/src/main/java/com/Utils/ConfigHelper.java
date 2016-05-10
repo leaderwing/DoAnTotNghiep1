@@ -1,4 +1,4 @@
-package com.utils;
+package com.Utils;
 
 import com.parse.ConfigCallback;
 import com.parse.ParseConfig;

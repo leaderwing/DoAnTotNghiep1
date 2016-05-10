@@ -1,23 +1,9 @@
-package com.utils;
+package com.Utils;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ContentUris;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.example.quy2016.doantotnghiep.ProfileFragment;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;

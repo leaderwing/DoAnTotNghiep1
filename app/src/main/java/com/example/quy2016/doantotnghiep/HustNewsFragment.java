@@ -10,16 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.hust.news.ListRSSItemsActivity;
+import com.Utils.Const;
 
 /**
  * Created by Ratan on 7/29/2015.
  */
 public class HustNewsFragment extends Fragment {
     ImageButton imgbutton1 , imgbutton2 ,imgbutton3, imgbutton4 ;
-    public  static  final  String LINK1 = "http://ctsv.hust.edu.vn/joomla-pages-2/smart-seach?format=feed&type=rss";
-    public  static  final  String LINK2 = "http://ctsv.hust.edu.vn/k2-listing/itemlist/category/133-medical?format=feed&type=rss";
-    public  static  final  String LINK3 = "http://dtdh.hust.edu.vn/tin-tuc/dao-tao?format=feed&amp;type=rss";
-    public  static  final  String LINK4 = "http://dtdh.hust.edu.vn/xlht?format=feed&amp;type=rss";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,7 +29,7 @@ public class HustNewsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext() , ListRSSItemsActivity.class);
-                i.putExtra("link",LINK1);
+                i.putExtra("link", Const.LINK1);
                 startActivity(i);
             }
         });
@@ -40,7 +37,7 @@ public class HustNewsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext() , ListRSSItemsActivity.class);
-                i.putExtra("link",LINK2);
+                i.putExtra("link",Const.LINK2);
                 startActivity(i);
             }
         });
@@ -48,7 +45,7 @@ public class HustNewsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext() , ListRSSItemsActivity.class);
-                i.putExtra("link",LINK3);
+                i.putExtra("link",Const.LINK3);
                 startActivity(i);
             }
         });
@@ -56,7 +53,7 @@ public class HustNewsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getContext() , ListRSSItemsActivity.class);
-                i.putExtra("link",LINK4);
+                i.putExtra("link",Const.LINK4);
                 startActivity(i);
             }
         });

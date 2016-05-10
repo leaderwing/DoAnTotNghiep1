@@ -2,7 +2,6 @@ package com.hust.forum;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,13 +12,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.utils.UserCommentAdapter;
+import com.parse.GetDataCallback;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
+import com.Utils.UserCommentAdapter;
 import com.example.quy2016.doantotnghiep.R;
 import com.model.Comments;
 import com.parse.FindCallback;
@@ -41,6 +41,7 @@ public class MainPostActivity extends AppCompatActivity {
     TextView txtname ,txtCreated,txtSchool, txtTitle ,txtContent;
     Button btnAddCmt;
     EditText addComment;
+    ParseImageView userPostImg;
     private List<Comments> commentsList = new ArrayList<>();
     public String id,school;
     private RecyclerView recyclerView;
@@ -60,10 +61,11 @@ public class MainPostActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_comment);
         txtname = (TextView) findViewById(R.id.postUser);
-        txtCreated = (TextView) findViewById(R.id.createdDatePost);
+        txtCreated = (TextView) findViewById(R.id.datePost);
         txtSchool = (TextView) findViewById(R.id.schoolPost);
         txtTitle = (TextView) findViewById(R.id.titlePost);
         txtContent = (TextView) findViewById(R.id.contentPost);
+        userPostImg = (ParseImageView) findViewById(R.id.user_post_img);
         addComment = (EditText) findViewById(R.id.add_cmt);
         btnAddCmt = (Button) findViewById(R.id.btSend_cmt);
         final View view = (View)findViewById(R.id.content_fragment);
@@ -144,7 +146,25 @@ public class MainPostActivity extends AppCompatActivity {
                         } catch (ParseException e1) {
                             e1.printStackTrace();
                         }
-                        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                        ParseQuery<ParseObject> query1 = ParseQuery.getQuery("user_details");
+                        query1.whereEqualTo("user",object.getParseUser("user"));
+                        query1.getFirstInBackground(new GetCallback<ParseObject>() {
+                            @Override
+                            public void done(ParseObject object, ParseException e) {
+                                ParseFile parseFile = object.getParseFile("thumbnail_avatar");
+                                if (parseFile != null)
+                                {
+                                    userPostImg.setParseFile(parseFile);
+                                    userPostImg.loadInBackground(new GetDataCallback() {
+                                        @Override
+                                        public void done(byte[] data, ParseException e) {
+
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         txtCreated.setText(formatter.format(object.getCreatedAt()));
                         txtTitle.setText(object.getString("Title"));
                         txtContent.setText(object.getString("Describe"));

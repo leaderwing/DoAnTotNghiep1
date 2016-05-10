@@ -1,4 +1,4 @@
-package com.utils;
+package com.Utils;
 
 /**
  * Created by Administrator on 4/25/2016.

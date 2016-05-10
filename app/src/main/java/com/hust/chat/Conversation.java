@@ -1,6 +1,6 @@
 package com.hust.chat;
 
-import com.utils.Const;
+import com.Utils.Const;
 import com.model.ProfileUser;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;

@@ -20,12 +20,13 @@ public class MainActivity extends AppCompatActivity{
     NavigationView mNavigationView;
     FragmentManager mFragmentManager;
     FragmentTransaction mFragmentTransaction;
+    public static boolean online = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //online = true;
         /**
          *Setup the DrawerLayout and NavigationView
          */
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity{
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
-//        UserStatus(true);
+//        online = true;
 //    }
 //
 //    @Override

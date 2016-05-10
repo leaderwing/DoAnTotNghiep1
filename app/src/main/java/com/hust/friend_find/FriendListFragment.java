@@ -11,8 +11,8 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.utils.Const;
-import com.utils.FriendListAdapter;
+import com.Utils.Const;
+import com.Utils.FriendListAdapter;
 import com.example.quy2016.doantotnghiep.R;
 import com.hust.chat.ChatActivity;
 import com.model.ProfileUser;
@@ -58,5 +58,6 @@ public class FriendListFragment extends Fragment {
         });
         return view;
     }
+
 
 }

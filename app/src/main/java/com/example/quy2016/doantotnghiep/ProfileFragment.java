@@ -49,7 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import com.utils.Utils;
+import com.Utils.Utils;
 
 /**
  * Created by Ratan on 7/29/2015.
@@ -135,10 +135,13 @@ public class ProfileFragment extends Fragment
                     profileUser.setHobbies(object.getString("user_hobbies"));
                     profileUser.setObjectId(object.getObjectId());
                    // profileUser.setbjectId(object.getObjectId());
-                    if(object.getParseFile("user_avatar")!= null)
-                    profileUser.setPhotoFile(object.getParseFile("user_avatar"));
-                    else
-                    avatar.setImageResource(R.drawable.fcb);
+                    if(object.getParseFile("user_avatar")!= null) {
+                        profileUser.setPhotoFile(object.getParseFile("user_avatar"));
+                        avatar.setParseFile(profileUser.getPhotoFile());
+                    }
+                    else {
+                        avatar.setImageResource(R.drawable.default_avatar);
+                    }
                     tvBirthday.setText(profileUser.getBirthday());
                     tvCourse.setText(profileUser.getCourse());
                     tvSchool.setText(profileUser.getSchool());
@@ -433,6 +436,7 @@ public class ProfileFragment extends Fragment
                     savePhotoFile(realPath);
                     return;
                 }
+                imgUpload.setImageURI(selectedImageUri);
 
             }
         }
