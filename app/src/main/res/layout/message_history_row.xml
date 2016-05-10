@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.parse.ParseImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chat_avatar"
+        android:src="@drawable/avatar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ABC DEFGHTI"
+        android:id="@+id/chat_name"
+        android:layout_alignParentTop="true"
+        android:textSize="@dimen/txt_18sp"
+        android:textColor="@color/blue"
+        android:layout_marginRight="@dimen/pad_5dp"
+        android:layout_toRightOf="@+id/chat_avatar"
+        android:layout_marginLeft="@dimen/pad_5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Hom qua sao ban lai di choi voi nguoi khac"
+        android:id="@+id/chat_text"
+        android:layout_below="@+id/chat_name"
+        android:maxLines="2"
+        android:layout_marginLeft="@dimen/pad_5dp"
+        android:layout_toRightOf="@+id/chat_avatar"
+        android:layout_toEndOf="@+id/chat_avatar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="11/01/2015"
+        android:id="@+id/chat_date"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView11"
+        android:src="@drawable/arrows"
+        android:layout_below="@+id/chat_date"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

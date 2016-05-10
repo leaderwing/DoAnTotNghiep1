@@ -11,8 +11,8 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.Utils.Const;
-import com.Utils.FriendListAdapter;
+import com.utils.Const;
+import com.utils.FriendListAdapter;
 import com.example.quy2016.doantotnghiep.R;
 import com.hust.chat.ChatActivity;
 import com.model.ProfileUser;
@@ -49,7 +49,7 @@ public class FriendListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    startActivity(new Intent(getActivity() ,ChatActivity.class ).putExtra(Const.EXTRA_DATA_SEND ,friendListAdapter.getItem(position).getUser().fetchIfNeeded().getUsername()));
+                    startActivity(new Intent(getActivity() ,ChatActivity.class ).putExtra(Const.EXTRA_DATA_SEND ,friendListAdapter.getItem(position).getUser().fetchIfNeeded().getObjectId()));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

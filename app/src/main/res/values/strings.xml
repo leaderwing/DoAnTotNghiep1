@@ -61,5 +61,6 @@
     <string name="link">
         http://stackoverflow.com/questions/26040437/parse-cloud-send-push-to-a-single-user?rq=1
         http://stackoverflow.com/questions/26827503/parse-sending-push-notification-to-specific-user-from-cloud-code?rq=1
+        https://georgenguyen79.wordpress.com/2012/09/07/create-a-simple-chat-application-using-parse-baas/
     </string>
 </resources>

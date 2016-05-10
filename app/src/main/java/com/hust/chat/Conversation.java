@@ -1,6 +1,7 @@
 package com.hust.chat;
 
-import com.Utils.Const;
+import com.parse.ParseUser;
+import com.utils.Const;
 import com.model.ProfileUser;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -60,8 +61,8 @@ public class Conversation extends ParseObject {
      *
      * @return the sender
      */
-    public String getSender() {
-        return getString("sender");
+    public ParseUser getSender() {
+        return getParseUser("sender");
     }
 
     /**
@@ -69,12 +70,12 @@ public class Conversation extends ParseObject {
      *
      * @param receiver the new sender
      */
-    public void setReceiver(String receiver) {
+    public void setReceiver(ParseUser receiver) {
         put("receiver",receiver);
     }
 
-    public String getReceiver() {
-        return getString("receiver");
+    public ParseUser getReceiver() {
+        return getParseUser("receiver");
     }
 
     /**
@@ -82,7 +83,7 @@ public class Conversation extends ParseObject {
      *
      * @param sender the new sender
      */
-    public void setSender(String sender) {
+    public void setSender(ParseUser sender) {
         put("sender",sender);
     }
 

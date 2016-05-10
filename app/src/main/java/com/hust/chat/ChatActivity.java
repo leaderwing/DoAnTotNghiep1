@@ -20,7 +20,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.Utils.Const;
+import com.parse.GetCallback;
+import com.utils.Const;
 import com.example.quy2016.doantotnghiep.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -42,9 +43,9 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter adapter;
     EditText editText;
     Button btnSend;
-    private String buddy , currentUser;
+    private ParseUser receiver , currentUser;
+    private String receiverId ;
     private Handler handler;
-    private ParseUser user;
     private  boolean isRunning = false;
     private Date lastMsgDate;
     @Override
@@ -66,8 +67,16 @@ public class ChatActivity extends AppCompatActivity {
                 sendMessage();
             }
         });
-        buddy = getIntent().getStringExtra(Const.EXTRA_DATA_SEND);
-        currentUser = ParseUser.getCurrentUser().getUsername();
+        receiverId = getIntent().getStringExtra(Const.EXTRA_DATA_SEND);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("user_details");
+        query.whereEqualTo("objectId" ,receiverId);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                receiver = object.getParseUser("user");
+            }
+        });
+        currentUser = ParseUser.getCurrentUser();
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         android.support.v7.app.ActionBar actionBar ;
@@ -110,7 +119,6 @@ public class ChatActivity extends AppCompatActivity {
             return;
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-
         String s = editText.getText().toString();
         final Conversation c = new Conversation();
         c.setMsg(s);
@@ -123,7 +131,7 @@ public class ChatActivity extends AppCompatActivity {
 
         ParseObject po = ParseObject.create(Conversation.class);
         po.put("sender", currentUser);
-        po.put("receiver", buddy);
+        po.put("receiver", receiver);
         // po.put("createdAt", "");
         po.put("message", s);
         po.saveEventually(new SaveCallback() {
@@ -142,10 +150,9 @@ public class ChatActivity extends AppCompatActivity {
     }
     private void LoadChatConversation() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Chat_data");
-
         if (listCon.size() == 0) {
-            ArrayList<String> all = new ArrayList<String>();
-            all.add(buddy);
+            ArrayList<ParseUser> all = new ArrayList<ParseUser>();
+            all.add(receiver);
             all.add(currentUser);
             query.whereContainedIn("sender", all);
             query.whereContainedIn("receiver", all);
@@ -154,7 +161,7 @@ public class ChatActivity extends AppCompatActivity {
         else {
             if (lastMsgDate != null) {
                 query.whereGreaterThan("createdAt", lastMsgDate);
-                query.whereEqualTo("sender", buddy);
+                query.whereEqualTo("sender", receiver);
                 query.whereEqualTo("receiver", currentUser);
             }
             query.orderByDescending("createdAt");
@@ -169,7 +176,7 @@ public class ChatActivity extends AppCompatActivity {
                             Conversation c = new Conversation();
                             c.setMsg(po.getString("message"));
                             c.setDate(po.getCreatedAt());
-                            c.setSender(po.getString("sender"));
+                            c.setSender(po.getParseUser("sender"));
                             listCon.add(c);
                             if (lastMsgDate == null
                                     || lastMsgDate.before(c.getDate()))

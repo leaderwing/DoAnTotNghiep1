@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.hust.news.ListRSSItemsActivity;
-import com.Utils.Const;
+import com.utils.Const;
 
 /**
  * Created by Ratan on 7/29/2015.

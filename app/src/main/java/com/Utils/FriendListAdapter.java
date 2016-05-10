@@ -1,4 +1,4 @@
-package com.Utils;
+package com.utils;
 
 import android.content.Context;
 import android.view.View;

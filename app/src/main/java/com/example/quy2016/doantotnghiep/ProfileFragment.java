@@ -49,7 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import com.Utils.Utils;
+import com.utils.Utils;
 
 /**
  * Created by Ratan on 7/29/2015.
@@ -92,7 +92,6 @@ public class ProfileFragment extends Fragment
         btnAddress = (ToggleButton) view.findViewById(R.id.btnAddress);
         btnCharacter = (ToggleButton) view.findViewById(R.id.btnCharacter);
         btnName = (ToggleButton) view.findViewById(R.id.btnName);
-        btnSave = (Button) view.findViewById(R.id.btnSave);
         imgUpload = (ImageButton) view.findViewById(R.id.upload_avatar);
         imgUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +146,6 @@ public class ProfileFragment extends Fragment
                     tvSchool.setText(profileUser.getSchool());
                     tvHobby.setText(profileUser.getHobbies());
                     tvCharacter.setText(profileUser.getCharacter());
-                    avatar.setParseFile(profileUser.getPhotoFile());
                    // avatar.setImageBitmap(profileUser.getPhotoFile().);
                 }
             }

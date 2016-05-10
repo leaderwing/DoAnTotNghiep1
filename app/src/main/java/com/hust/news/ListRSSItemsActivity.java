@@ -23,7 +23,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.quy2016.doantotnghiep.R;
-import com.Utils.Const;
+import com.utils.Const;
 
 public class ListRSSItemsActivity extends AppCompatActivity {
 
