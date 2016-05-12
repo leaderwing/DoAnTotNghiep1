@@ -1,13 +1,17 @@
 package com.hust.friend_find;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.utils.Const;
 import com.example.quy2016.doantotnghiep.R;
 import com.model.ProfileUser;
 import com.parse.DeleteCallback;
@@ -36,6 +41,7 @@ import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Administrator on 4/21/2016.
@@ -58,6 +64,26 @@ public class SearchFriendFragment extends Fragment{
         search.setQueryHint("Tìm kiếm tên bạn bè...");
         search_results = (ListView) view.findViewById(R.id.listview_search);
         btnVoice = (ImageButton) view.findViewById(R.id.search_voice);
+        btnVoice.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                        getString(R.string.speech_prompt));
+                try {
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getParentFragment().startActivityForResult(intent, Const.STATUS_SEND_SPEECH);
+                } catch (ActivityNotFoundException a) {
+                    Toast.makeText(getContext(),
+                            getString(R.string.speech_not_supported),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         search.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener()
         {
 
@@ -343,5 +369,23 @@ public class SearchFriendFragment extends Fragment{
         TextView user_school;
         ToggleButton add_friend;
         ImageButton view_profile;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case Const.STATUS_SEND_SPEECH: {
+                if (resultCode == Activity.RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    search.setQuery(result.get(0),true);
+                    Log.d("Tag voice:" , result.get(0));
+                }
+                break;
+            }
+        }
     }
 }

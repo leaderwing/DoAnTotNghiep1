@@ -10,7 +10,7 @@ public class Const {
 
     /** The Constant STATUS_SENT. */
     public static final int STATUS_SENT = 1;
-
+    public static  final int STATUS_SEND_SPEECH = 100;
     /** The Constant STATUS_FAILED. */
     public static final int STATUS_FAILED = 2;
     public static final String EXTRA_DATA_SEND = "extra_data";

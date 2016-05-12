@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.parse.GetCallback;
 import com.utils.Const;
 import com.example.quy2016.doantotnghiep.R;
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -32,6 +35,7 @@ import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -68,14 +72,13 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         receiverId = getIntent().getStringExtra(Const.EXTRA_DATA_SEND);
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("user_details");
-        query.whereEqualTo("objectId" ,receiverId);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                receiver = object.getParseUser("user");
-            }
-        });
+        ParseQuery<ParseUser> query = new ParseQuery<ParseUser>("_User");
+        try {
+            receiver = query.get(receiverId);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         currentUser = ParseUser.getCurrentUser();
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -139,8 +142,20 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e)
             {
-                if (e == null)
+                if (e == null) {
                     c.setStatus(Const.STATUS_SENT);
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put("objectId", receiver.getObjectId().toString());
+                   ParseInstallation installation  =   ParseInstallation.getCurrentInstallation();
+                    installation.setObjectId(receiverId);
+                    installation.saveInBackground();
+                    ParseCloud.callFunctionInBackground("message", map, new FunctionCallback<String>() {
+                        @Override
+                        public void done(String object, ParseException e) {
+                            Log.d("Result" , object);
+                        }
+                    });
+                }
                 else
                     c.setStatus(Const.STATUS_FAILED);
                 //clearData();
@@ -157,45 +172,44 @@ public class ChatActivity extends AppCompatActivity {
             query.whereContainedIn("sender", all);
             query.whereContainedIn("receiver", all);
 
-        }
-        else {
+        } else {
             if (lastMsgDate != null) {
                 query.whereGreaterThan("createdAt", lastMsgDate);
                 query.whereEqualTo("sender", receiver);
                 query.whereEqualTo("receiver", currentUser);
-            }
-            query.orderByDescending("createdAt");
-            query.setLimit(30);
-            query.findInBackground(new FindCallback<ParseObject>() {
+                query.orderByDescending("createdAt");
+                query.setLimit(30);
+                query.findInBackground(new FindCallback<ParseObject>() {
 
-                @Override
-                public void done(List<ParseObject> li, ParseException e) {
-                    if (li != null && li.size() > 0) {
-                        for (int i = li.size() - 1; i >= 0; i--) {
-                            ParseObject po = li.get(i);
-                            Conversation c = new Conversation();
-                            c.setMsg(po.getString("message"));
-                            c.setDate(po.getCreatedAt());
-                            c.setSender(po.getParseUser("sender"));
-                            listCon.add(c);
-                            if (lastMsgDate == null
-                                    || lastMsgDate.before(c.getDate()))
-                                lastMsgDate = c.getDate();
-                            adapter.notifyDataSetChanged();
+                    @Override
+                    public void done(List<ParseObject> li, ParseException e) {
+                        if (li != null && li.size() > 0) {
+                            for (int i = li.size() - 1; i >= 0; i--) {
+                                ParseObject po = li.get(i);
+                                Conversation c = new Conversation();
+                                c.setMsg(po.getString("message"));
+                                c.setDate(po.getCreatedAt());
+                                c.setSender(po.getParseUser("sender"));
+                                listCon.add(c);
+                                if (lastMsgDate == null
+                                        || lastMsgDate.before(c.getDate()))
+                                    lastMsgDate = c.getDate();
+                                adapter.notifyDataSetChanged();
+                            }
                         }
+                        handler.postDelayed(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                if (isRunning)
+                                    LoadChatConversation();
+                            }
+                        }, 100);
                     }
-                    handler.postDelayed(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (isRunning)
-                                LoadChatConversation();
-                        }
-                    }, 100);
-                }
-            });
+                });
 
 
+            }
         }
     }
     private class ChatAdapter extends BaseAdapter

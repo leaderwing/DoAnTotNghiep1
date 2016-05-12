@@ -1,16 +1,15 @@
 package com.hust.forum;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -18,14 +17,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.parse.GetCallback;
 import com.utils.DividerItemDecoration;
 import com.utils.PostInfoAdapter;
 import com.example.quy2016.doantotnghiep.R;
 import com.model.Post_Info;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -37,13 +37,15 @@ import java.util.List;
  * Created by Administrator on 4/20/2016.
  */
 public class DetailTopicsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-    private List<Post_Info> post_infos = new ArrayList<>();
+    private ArrayList<Post_Info> post_infos = new ArrayList<>();
     private RecyclerView recyclerView;
     private PostInfoAdapter postInfoAdapter;
     public int newInt;
     private String course;
     public static final int REQUEST_CODE = 111;
     ProgressDialog progress;
+    private SearchView searchView;
+    private MenuItem searchMenuItem;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -92,7 +94,7 @@ public class DetailTopicsActivity extends AppCompatActivity implements SearchVie
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        postInfoAdapter = new PostInfoAdapter(post_infos);
+        postInfoAdapter = new PostInfoAdapter(this,post_infos);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -164,12 +166,19 @@ public class DetailTopicsActivity extends AppCompatActivity implements SearchVie
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+
+
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+
+       // postInfoAdapter.getFilter().filter(newText);
+        final List<Post_Info> filteredModelList = filter(post_infos, newText);
+        postInfoAdapter.setFilter(filteredModelList);
+
+        return true;
     }
 
 
@@ -226,15 +235,26 @@ public class DetailTopicsActivity extends AppCompatActivity implements SearchVie
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_post, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.filter)
-                .getActionView();
-        searchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getComponentName()));
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setOnQueryTextListener( this);
+        final MenuItem item = menu.findItem(R.id.filter);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
 
-        return true;
+        MenuItemCompat.setOnActionExpandListener(item,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        // Do something when collapsed
+                        postInfoAdapter.setFilter(post_infos);
+                        return true; // Return true to collapse action view
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        // Do something when expanded
+                        return true; // Return true to expand action view
+                    }
+                });
+        return super.onCreateOptionsMenu(menu);
     }
 
 
@@ -277,6 +297,18 @@ public class DetailTopicsActivity extends AppCompatActivity implements SearchVie
 
             postInfoAdapter.notifyDataSetChanged();
         }
+    }
+    private List<Post_Info> filter(List<Post_Info> posts, String query) {
+        query = query.toLowerCase();
+
+        final List<Post_Info> filteredList = new ArrayList<>();
+        for (Post_Info post : posts) {
+            final String text = post.getTitle().toLowerCase();
+            if (text.contains(query)) {
+                filteredList.add(post);
+            }
+        }
+        return filteredList;
     }
 
 }

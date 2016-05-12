@@ -1,4 +1,4 @@
-package com.Utils;
+package com.utils;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.quy2016.doantotnghiep.R;
+import com.hust.forum.DetailTopicsActivity;
 import com.model.Post_Info;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -20,14 +21,17 @@ import com.parse.ParseUser;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Created by Administrator on 4/25/2016.
  */
-public class PostInfoAdapter extends RecyclerView.Adapter<PostInfoAdapter.MyViewHolder> {
+public class PostInfoAdapter extends   RecyclerView.Adapter<PostInfoAdapter.MyViewHolder>   {
+    //private List<Post_Info> postsList;
     private List<Post_Info> postsList;
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    private List<Post_Info> filteredList;
+    private DetailTopicsActivity activity;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title , author , date , viewNum , commentNum ;
         public ParseImageView imgAvatar;
 
@@ -40,12 +44,18 @@ public class PostInfoAdapter extends RecyclerView.Adapter<PostInfoAdapter.MyView
             viewNum = (TextView) view.findViewById(R.id.numView);
             commentNum = (TextView) view.findViewById(R.id.numComment);
             imgAvatar = (ParseImageView) view.findViewById(R.id.imageAvatar);
+
         }
 
 
+
+
     }
-    public PostInfoAdapter( List<Post_Info> postsList) {
+    public PostInfoAdapter(DetailTopicsActivity activity, ArrayList<Post_Info> postsList ) {
         this.postsList = postsList;
+        this.activity = activity;
+        this.filteredList = filteredList;
+        //getFilter();
     }
 
     @Override
@@ -96,4 +106,10 @@ public class PostInfoAdapter extends RecyclerView.Adapter<PostInfoAdapter.MyView
     public int getItemCount() {
         return postsList.size();
     }
+    public void setFilter(List<Post_Info> post_info) {
+        postsList = new ArrayList<>();
+        postsList.addAll(post_info);
+        notifyDataSetChanged();
+    }
+
 }
