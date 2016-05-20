@@ -4,6 +4,7 @@ package com.utils;
  * Created by Administrator on 4/21/2016.
  */
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import com.android.volley.Request;
@@ -25,7 +26,10 @@ public class AppController extends Application {
     private RequestQueue mRequestQueue;
 
     private static AppController mInstance;
+    public static final boolean APPDEBUG = false;
 
+    // Debugging tag for the application
+    public static final String APPTAG = "HUST";
     // Used to pass location from MainActivity to PostActivity
     public static final String INTENT_EXTRA_LOCATION = "location";
 
@@ -47,12 +51,19 @@ public class AppController extends Application {
         ParseObject.registerSubclass(Comments.class);
         ParseObject.registerSubclass(UserFriends.class);
         Parse.initialize(this, "ZVuYQgGmT79jqb4HpbbabGz8xenRTXaYI30cCTDM", "Zrw7TkZIy1jGGY4JEGl0MAtakRBLXCeIMnF4qjrQ");
+        preferences = getSharedPreferences("com.parse.anywall", Context.MODE_PRIVATE);
         ParseInstallation.getCurrentInstallation().saveInBackground();
         mInstance = this;
 //        preferences = getSharedPreferences("com.parse.anywall", Context.MODE_PRIVATE);
 //
 //        configHelper = new ConfigHelper();
 //        configHelper.fetchConfigIfNeeded();
+    }
+    public static float getSearchDistance() {
+        return preferences.getFloat(KEY_SEARCH_DISTANCE, DEFAULT_SEARCH_DISTANCE);
+    }
+    public static void setSearchDistance(float value) {
+        preferences.edit().putFloat(KEY_SEARCH_DISTANCE, value).commit();
     }
 
     public static synchronized AppController getInstance() {

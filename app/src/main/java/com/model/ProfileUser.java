@@ -2,7 +2,9 @@ package com.model;
 
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -79,6 +81,16 @@ public class ProfileUser extends ParseObject {
     }
     public void setPhotoFile(ParseFile file) {
         put("user_avatar", file);
+    }
+    public ParseGeoPoint getLocation() {
+        return getParseGeoPoint("location");
+    }
+
+    public void setLocation(ParseGeoPoint value) {
+        put("location", value);
+    }
+    public static ParseQuery<ProfileUser> getQuery() {
+        return ParseQuery.getQuery(ProfileUser.class);
     }
 
 }

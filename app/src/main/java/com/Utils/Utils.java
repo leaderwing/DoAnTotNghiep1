@@ -1,7 +1,10 @@
 package com.utils;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
 import com.parse.ParseFile;
@@ -101,6 +104,23 @@ public class Utils {
             po.saveInBackground();
         }
         return po;
+    }
+    public static class ErrorDialogFragment extends DialogFragment {
+        private Dialog mDialog;
+
+        public ErrorDialogFragment() {
+            super();
+            mDialog = null;
+        }
+
+        public void setDialog(Dialog dialog) {
+            mDialog = dialog;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return mDialog;
+        }
     }
 
 
